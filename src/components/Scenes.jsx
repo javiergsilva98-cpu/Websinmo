@@ -92,7 +92,7 @@ export default function Scenes({ scenes, trackRef }) {
           tl.fromTo(
             figures[0],
             { clipPath: 'inset(14% 9% 14% 9% round 22px)' },
-            { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: clipDur },
+            { clipPath: 'inset(0% 0% 0% 0% round 16px)', duration: clipDur },
             scene.from,
           )
           tl.fromTo(
@@ -150,12 +150,6 @@ export default function Scenes({ scenes, trackRef }) {
           className={`scene${scene.image ? ' scene--media' : ''} scene--${variant}`}
           data-scene={scene.id}
         >
-          {/* Hero: la foto ocupa todo el viewport, fuera del bloque de texto */}
-          {variant === 'hero' && (
-            <figure className="scene-figure hero-figure">
-              {img(scene.image, true)}
-            </figure>
-          )}
           <div className="scene-inner">
             {variant === 'duo' && (
               <div className="duo">
@@ -163,26 +157,12 @@ export default function Scenes({ scenes, trackRef }) {
                 <figure className="scene-figure duo-detail">{img(scene.detail)}</figure>
               </div>
             )}
-            {variant === 'overlay' && (
-              <figure className="scene-figure overlay-figure">
-                {img(scene.image)}
-                <figcaption className="overlay-text">
-                  {kicker}
-                  <h2 className="scene-title">{scene.title}</h2>
-                  {body}
-                </figcaption>
-              </figure>
+            {scene.image && variant !== 'duo' && (
+              <figure className="scene-figure">{img(scene.image, variant === 'hero')}</figure>
             )}
-            {scene.image && !['hero', 'duo', 'overlay'].includes(variant) && (
-              <figure className="scene-figure">{img(scene.image)}</figure>
-            )}
-            {variant !== 'overlay' && (
-              <>
-                {kicker}
-                <h2 className="scene-title">{scene.title}</h2>
-                {body}
-              </>
-            )}
+            {kicker}
+            <h2 className="scene-title">{scene.title}</h2>
+            {body}
 
             {scene.stats && (
               <ul className="scene-stats">

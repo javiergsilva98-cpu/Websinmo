@@ -23,7 +23,7 @@ export const LINKS = {
 // detalle que se solapa a la principal.
 //
 // layout controla el tratamiento editorial de cada sección:
-//   variant  hero | duo | top | portrait | overlay | statement
+//   variant  hero | duo | top | portrait | bottom (sin variant = plano)
 //   anim     clip | slide | zoom | fade   (entrada de la fotografía)
 //   slideFrom 'left' | 'right'            (solo anim: slide)
 //   hideKicker / hideBody                 (variación de ritmo tipográfico)
@@ -96,8 +96,8 @@ export const SCENES = [
     title: 'Materia y paisaje',
     body: 'Madera, piedra y estuco frente al desierto: la misma paleta, otra atmósfera.',
     image: { src: '/img/suite-v1.jpg', alt: 'Suite de invitados con vistas al desierto' },
-    // Tarjeta abajo del viewport con el texto encima de la foto
-    layout: { variant: 'overlay', anim: 'slide', slideFrom: 'right' },
+    // Tarjeta compacta en la parte baja del viewport, texto debajo de la foto
+    layout: { variant: 'bottom', anim: 'slide', slideFrom: 'right' },
   },
   {
     id: 'aseo',
@@ -108,8 +108,8 @@ export const SCENES = [
     title: 'Los detalles importan',
     body: 'Iluminación integrada, lavabo de mármol y nichos retroiluminados en nogal.',
     image: { src: '/img/aseo-v1.jpg', alt: 'Aseo con espejo retroiluminado y mueble de nogal' },
-    // Frase corta y grande + foto compacta: respiro antes del cierre
-    layout: { variant: 'statement', anim: 'fade', hideKicker: true, hideBody: true },
+    // Tratamiento estándar: foto, overline, título y párrafo
+    layout: { anim: 'fade' },
   },
   {
     id: 'cierre',
