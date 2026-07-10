@@ -13,12 +13,18 @@ const easeInOutCubic = (t) =>
 
 /**
  * Inicializa Lenis + integración con GSAP/ScrollTrigger y un "imán" de
- * scroll (snap) gestionado por Lenis — NUNCA por el snap nativo de
- * ScrollTrigger, porque ambos se pelean por el control del scroll.
+ * scroll (snap) — NUNCA el snap nativo de ScrollTrigger, porque ambos
+ * se pelean por el control del scroll.
  *
- * El imán detecta que el scroll se ha parado por POSICIÓN (ticks < 3px
- * no cuentan como movimiento), no por velocidad: la velocidad de Lenis
- * decae asintóticamente y en iOS tardaría ~1s en llegar a cero.
+ * Diseño anti-oscilación:
+ *  - La parada se detecta por POSICIÓN (ticks < 3px no cuentan), no por
+ *    velocidad: la velocidad decae asintóticamente y en iOS tardaría ~1s.
+ *  - El imán ejecuta SU PROPIA animación frame a frame (lenis.scrollTo
+ *    immediate), así que se aborta al instante con cualquier input y
+ *    jamás queda en un estado a medias.
+ *  - Histéresis: tras un snap (o tras decidir no imantar), el imán queda
+ *    DESARMADO hasta que hay un gesto real de scroll. Un snap por gesto:
+ *    imposible entrar en bucle de sube-y-baja.
  *
  * @param {() => number[]} getSnapPoints posiciones de scroll (px) a las que imantar
  * @returns {{ lenis: Lenis, destroy: () => void }}
@@ -39,44 +45,74 @@ export function initSmoothScroll(getSnapPoints) {
   gsap.ticker.lagSmoothing(0)
 
   // ---- Imán de scroll -------------------------------------------------
-  const MOVE_EPS = 3 // px: por debajo de esto el frame cuenta como "quieto"
+  const MOVE_EPS = 3 // px/frame: por debajo cuenta como "quieto"
   const STILL_FRAMES = 7 // ~115ms a 60fps parado antes de imantar
   const MAX_SNAP_DIST_VH = 0.6 // no imantar si el punto queda a > 60% de pantalla
+  const REARM_DIST = 24 // px de scroll real necesarios para rearmar el imán
 
   let lastY = lenis.scroll
   let stillFrames = 0
-  let snapping = false
   let touching = false // con el dedo en pantalla nunca se imanta
+  let armed = true // histéresis: un snap por gesto de scroll
+  let movedSinceDisarm = 0
+  let anim = null // animación de snap en curso {from, to, t0, dur}
 
-  const cancelSnap = () => {
-    snapping = false
+  const abortSnap = () => {
+    anim = null
     stillFrames = -20 // periodo de gracia tras input del usuario
+  }
+  const onWheel = () => {
+    abortSnap()
+    armed = true // la rueda/trackpad es siempre un gesto deliberado
   }
   const onTouchStart = () => {
     touching = true
-    cancelSnap()
+    abortSnap()
+    armed = true
   }
   const onTouchEnd = () => {
     touching = false
     stillFrames = -10
   }
-  window.addEventListener('wheel', cancelSnap, { passive: true })
+  window.addEventListener('wheel', onWheel, { passive: true })
   window.addEventListener('touchstart', onTouchStart, { passive: true })
   window.addEventListener('touchend', onTouchEnd, { passive: true })
   window.addEventListener('touchcancel', onTouchEnd, { passive: true })
 
   const onMagnetTick = () => {
+    // Animación de snap en curso: la conducimos nosotros, frame a frame.
+    if (anim) {
+      const t = Math.min(1, (performance.now() - anim.t0) / anim.dur)
+      const y = anim.from + (anim.to - anim.from) * easeInOutCubic(t)
+      lenis.scrollTo(y, { immediate: true })
+      lastY = y // nuestro propio movimiento no cuenta como gesto
+      if (t >= 1) {
+        anim = null
+        stillFrames = 0
+        // armed sigue false: no habrá otro snap hasta un scroll real
+      }
+      return
+    }
+
     const y = lenis.scroll
     const moved = Math.abs(y - lastY)
     lastY = y
 
-    if (snapping || touching) return
     if (moved >= MOVE_EPS) {
       stillFrames = Math.min(stillFrames, 0)
+      movedSinceDisarm += moved
+      if (movedSinceDisarm >= REARM_DIST) armed = true
       return
     }
+
+    if (!armed || touching) return
     stillFrames++
     if (stillFrames < STILL_FRAMES) return
+
+    // El scroll se ha parado de verdad: decisión única para este gesto.
+    armed = false
+    movedSinceDisarm = 0
+    stillFrames = 0
 
     const points = getSnapPoints()
     if (!points.length) return
@@ -85,31 +121,21 @@ export function initSmoothScroll(getSnapPoints) {
       if (Math.abs(p - y) < Math.abs(nearest - y)) nearest = p
     }
     const dist = Math.abs(nearest - y)
-    if (dist < 2 || dist > window.innerHeight * MAX_SNAP_DIST_VH) {
-      stillFrames = 0
-      return
-    }
+    if (dist < 2 || dist > window.innerHeight * MAX_SNAP_DIST_VH) return
 
-    // lock:false — el usuario siempre puede interrumpir el imán;
-    // cancelSnap además corta nuestro estado al primer input.
-    snapping = true
-    lenis.scrollTo(nearest, {
-      duration: Math.min(0.5, Math.max(0.25, dist / 1500)),
-      easing: easeInOutCubic,
-      lock: false,
-      onComplete: () => {
-        snapping = false
-        stillFrames = 0
-        lastY = nearest
-      },
-    })
+    anim = {
+      from: y,
+      to: nearest,
+      t0: performance.now(),
+      dur: Math.min(500, Math.max(250, (dist / 1500) * 1000)),
+    }
   }
   gsap.ticker.add(onMagnetTick)
 
   const destroy = () => {
     gsap.ticker.remove(onTick)
     gsap.ticker.remove(onMagnetTick)
-    window.removeEventListener('wheel', cancelSnap)
+    window.removeEventListener('wheel', onWheel)
     window.removeEventListener('touchstart', onTouchStart)
     window.removeEventListener('touchend', onTouchEnd)
     window.removeEventListener('touchcancel', onTouchEnd)
