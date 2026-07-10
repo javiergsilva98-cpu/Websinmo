@@ -6,7 +6,7 @@ import './Scenes.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const FADE = 0.06 // fracción del scroll que dura cada fundido
+const FADE = 0.04 // fracción del scroll que dura cada fundido
 
 function WhatsAppIcon() {
   return (
@@ -84,8 +84,17 @@ export default function Scenes({ scenes, trackRef }) {
   return (
     <div className="scenes" ref={rootRef}>
       {scenes.map((scene) => (
-        <section key={scene.id} className="scene" data-scene={scene.id}>
+        <section
+          key={scene.id}
+          className={`scene${scene.image ? ' scene--media' : ''}`}
+          data-scene={scene.id}
+        >
           <div className="scene-inner">
+            {scene.image && (
+              <figure className="scene-figure">
+                <img src={scene.image.src} alt={scene.image.alt} />
+              </figure>
+            )}
             {scene.kicker && <p className="scene-kicker">{scene.kicker}</p>}
             <h2 className="scene-title">{scene.title}</h2>
             {scene.body && <p className="scene-body">{scene.body}</p>}
