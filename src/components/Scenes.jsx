@@ -61,19 +61,63 @@ export default function Scenes({ scenes, trackRef }) {
         if (!el) return
         const isFirst = i === 0
         const isLast = i === scenes.length - 1
+        const layout = scene.layout || {}
+        const anim = layout.anim || 'fade'
+        const figures = el.querySelectorAll('.scene-figure')
 
+        // Entrada/salida del contenedor. El hero entra sin deriva vertical:
+        // su protagonismo lo lleva el reveal de clip-path.
+        const drift = anim === 'clip' ? 0 : 28
         if (isFirst) {
           gsap.set(el, { autoAlpha: 1, y: 0 })
         } else {
           tl.fromTo(
             el,
-            { autoAlpha: 0, y: 28 },
+            { autoAlpha: 0, y: drift },
             { autoAlpha: 1, y: 0, duration: FADE },
             scene.from,
           )
         }
         if (!isLast) {
-          tl.to(el, { autoAlpha: 0, y: -28, duration: FADE }, scene.to - FADE)
+          tl.to(el, { autoAlpha: 0, y: -drift, duration: FADE }, scene.to - FADE)
+        }
+
+        // Entrada propia de cada fotografía: tres familias de efecto
+        // (reveal con clip-path, zoom lento, slide lateral) repartidas
+        // entre secciones para romper la monotonía.
+        if (anim === 'clip' && figures[0]) {
+          // El reveal completa justo antes del punto de imán (snap):
+          // en reposo la foto ya está a sangre, sin borde visible.
+          const clipDur = Math.max(0.02, (scene.snap ?? scene.from) - scene.from - 0.008)
+          tl.fromTo(
+            figures[0],
+            { clipPath: 'inset(14% 9% 14% 9% round 22px)' },
+            { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: clipDur },
+            scene.from,
+          )
+          tl.fromTo(
+            figures[0].querySelector('img'),
+            { scale: 1.12 },
+            { scale: 1, duration: clipDur * 1.5 },
+            scene.from,
+          )
+        } else if (anim === 'zoom' && figures[0]) {
+          tl.fromTo(
+            figures[0].querySelector('img'),
+            { scale: 1.16 },
+            { scale: 1, duration: FADE * 1.4 },
+            scene.from,
+          )
+        } else if (anim === 'slide' && figures.length) {
+          const base = layout.slideFrom === 'right' ? 64 : -64
+          figures.forEach((fig, k) => {
+            tl.fromTo(
+              fig,
+              { x: k === 0 ? base : -base, autoAlpha: k === 0 ? 1 : 0 },
+              { x: 0, autoAlpha: 1, duration: FADE },
+              scene.from + k * 0.01,
+            )
+          })
         }
       })
     }, root)
@@ -83,21 +127,62 @@ export default function Scenes({ scenes, trackRef }) {
 
   return (
     <div className="scenes" ref={rootRef}>
-      {scenes.map((scene) => (
+      {scenes.map((scene) => {
+        const layout = scene.layout || {}
+        const variant = layout.variant || 'plain'
+        const kicker = scene.kicker && !layout.hideKicker && (
+          <p className="scene-kicker">{scene.kicker}</p>
+        )
+        const body = scene.body && !layout.hideBody && (
+          <p className="scene-body">{scene.body}</p>
+        )
+        const img = (image, eager = false) => (
+          <img
+            src={image.src}
+            alt={image.alt}
+            loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        )
+        return (
         <section
           key={scene.id}
-          className={`scene${scene.image ? ' scene--media' : ''}`}
+          className={`scene${scene.image ? ' scene--media' : ''} scene--${variant}`}
           data-scene={scene.id}
         >
+          {/* Hero: la foto ocupa todo el viewport, fuera del bloque de texto */}
+          {variant === 'hero' && (
+            <figure className="scene-figure hero-figure">
+              {img(scene.image, true)}
+            </figure>
+          )}
           <div className="scene-inner">
-            {scene.image && (
-              <figure className="scene-figure">
-                <img src={scene.image.src} alt={scene.image.alt} />
+            {variant === 'duo' && (
+              <div className="duo">
+                <figure className="scene-figure duo-main">{img(scene.image)}</figure>
+                <figure className="scene-figure duo-detail">{img(scene.detail)}</figure>
+              </div>
+            )}
+            {variant === 'overlay' && (
+              <figure className="scene-figure overlay-figure">
+                {img(scene.image)}
+                <figcaption className="overlay-text">
+                  {kicker}
+                  <h2 className="scene-title">{scene.title}</h2>
+                  {body}
+                </figcaption>
               </figure>
             )}
-            {scene.kicker && <p className="scene-kicker">{scene.kicker}</p>}
-            <h2 className="scene-title">{scene.title}</h2>
-            {scene.body && <p className="scene-body">{scene.body}</p>}
+            {scene.image && !['hero', 'duo', 'overlay'].includes(variant) && (
+              <figure className="scene-figure">{img(scene.image)}</figure>
+            )}
+            {variant !== 'overlay' && (
+              <>
+                {kicker}
+                <h2 className="scene-title">{scene.title}</h2>
+                {body}
+              </>
+            )}
 
             {scene.stats && (
               <ul className="scene-stats">
@@ -134,7 +219,8 @@ export default function Scenes({ scenes, trackRef }) {
             )}
           </div>
         </section>
-      ))}
+        )
+      })}
     </div>
   )
 }

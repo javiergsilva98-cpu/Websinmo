@@ -19,7 +19,14 @@ export const LINKS = {
 // Escenas superpuestas al vídeo.
 // from/to son fracciones del progreso total del scroll (0 → 1).
 // snap es el punto de imán: donde se queda quieto el scroll al soltar.
-// image añade una fotografía del proyecto sobre el texto.
+// image añade una fotografía del proyecto; detail una segunda foto de
+// detalle que se solapa a la principal.
+//
+// layout controla el tratamiento editorial de cada sección:
+//   variant  hero | duo | top | portrait | overlay | statement
+//   anim     clip | slide | zoom | fade   (entrada de la fotografía)
+//   slideFrom 'left' | 'right'            (solo anim: slide)
+//   hideKicker / hideBody                 (variación de ritmo tipográfico)
 export const SCENES = [
   {
     id: 'hero',
@@ -40,6 +47,8 @@ export const SCENES = [
     title: 'Abierto al horizonte',
     body: 'El paisaje entra en casa: carpinterías ocultas y un interior que cede el protagonismo al mar.',
     image: { src: '/img/salon-v1.jpg', alt: 'Salón con vistas al mar al atardecer' },
+    // La joya del proyecto: foto a pantalla completa con reveal de clip-path
+    layout: { variant: 'hero', anim: 'clip' },
   },
   {
     id: 'cocina',
@@ -50,6 +59,9 @@ export const SCENES = [
     title: 'El centro de la casa',
     body: 'Isla de mármol y frentes en grafito, con la mesa de comedor mirando al agua.',
     image: { src: '/img/cocina-v1.jpg', alt: 'Cocina con isla de mármol y vistas al mar' },
+    detail: { src: '/img/cocina-detail-v1.jpg', alt: 'Detalle del mármol de la isla' },
+    // Dúo general + detalle, texto a la izquierda, entrada lateral
+    layout: { variant: 'duo', anim: 'slide', slideFrom: 'left' },
   },
   {
     id: 'dormitorio',
@@ -60,6 +72,8 @@ export const SCENES = [
     title: 'Despertar sobre el mar',
     body: 'La terraza como prolongación del dormitorio; materiales cálidos y luz de poniente.',
     image: { src: '/img/dormitorio-v1.jpg', alt: 'Dormitorio principal abierto a la terraza y al mar' },
+    // Banner arriba del viewport, sin overline, zoom lento
+    layout: { variant: 'top', anim: 'zoom', hideKicker: true },
   },
   {
     id: 'bano',
@@ -69,7 +83,9 @@ export const SCENES = [
     kicker: 'Baño principal',
     title: 'Mármol y calma',
     body: 'Bañera exenta tallada en mármol, ducha efecto lluvia y vestidor en cristal texturizado.',
-    image: { src: '/img/bano-v1.jpg', alt: 'Baño principal con bañera de mármol exenta' },
+    image: { src: '/img/bano-portrait-v1.jpg', alt: 'Baño principal con bañera de mármol exenta' },
+    // Formato retrato en columna, fade puro
+    layout: { variant: 'portrait', anim: 'fade' },
   },
   {
     id: 'suite',
@@ -80,6 +96,8 @@ export const SCENES = [
     title: 'Materia y paisaje',
     body: 'Madera, piedra y estuco frente al desierto: la misma paleta, otra atmósfera.',
     image: { src: '/img/suite-v1.jpg', alt: 'Suite de invitados con vistas al desierto' },
+    // Tarjeta abajo del viewport con el texto encima de la foto
+    layout: { variant: 'overlay', anim: 'slide', slideFrom: 'right' },
   },
   {
     id: 'aseo',
@@ -90,6 +108,8 @@ export const SCENES = [
     title: 'Los detalles importan',
     body: 'Iluminación integrada, lavabo de mármol y nichos retroiluminados en nogal.',
     image: { src: '/img/aseo-v1.jpg', alt: 'Aseo con espejo retroiluminado y mueble de nogal' },
+    // Frase corta y grande + foto compacta: respiro antes del cierre
+    layout: { variant: 'statement', anim: 'fade', hideKicker: true, hideBody: true },
   },
   {
     id: 'cierre',

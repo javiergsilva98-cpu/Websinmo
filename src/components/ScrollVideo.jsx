@@ -5,6 +5,20 @@ import './ScrollVideo.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Encuadre del vídeo por tramo de scroll: pequeños cambios de zoom y
+// deriva vertical para que el fondo no repita el mismo movimiento en
+// todas las secciones (solo transform → no cuesta rendimiento).
+const PARALLAX_KEYFRAMES = [
+  { p: 0, scale: 1, yPercent: 0 },
+  { p: 0.143, scale: 1.06, yPercent: -1.6 },
+  { p: 0.286, scale: 1.0, yPercent: 1.2 },
+  { p: 0.429, scale: 1.07, yPercent: -1.0 },
+  { p: 0.571, scale: 1.02, yPercent: 1.8 },
+  { p: 0.714, scale: 1.08, yPercent: -1.8 },
+  { p: 0.857, scale: 1.03, yPercent: 1.0 },
+  { p: 1, scale: 1, yPercent: 0 },
+]
+
 /**
  * Vídeo de fondo cuyo tiempo se controla con el scroll (scroll-scrubbing).
  *
@@ -29,11 +43,32 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export default function ScrollVideo({ src, poster, trackRef }) {
   const videoRef = useRef(null)
+  const mediaRef = useRef(null)
 
   useEffect(() => {
     const video = videoRef.current
     const track = trackRef.current
     if (!video || !track) return
+
+    // Parallax del encuadre: timeline con scrub entre keyframes.
+    const parallax = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: track,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: true,
+      },
+    })
+    for (let i = 1; i < PARALLAX_KEYFRAMES.length; i++) {
+      const prev = PARALLAX_KEYFRAMES[i - 1]
+      const kf = PARALLAX_KEYFRAMES[i]
+      parallax.to(
+        mediaRef.current,
+        { scale: kf.scale, yPercent: kf.yPercent, duration: kf.p - prev.p },
+        prev.p,
+      )
+    }
 
     let duration = 0
     let targetTime = 0
@@ -88,6 +123,8 @@ export default function ScrollVideo({ src, poster, trackRef }) {
 
     return () => {
       gsap.ticker.remove(onTick)
+      parallax.scrollTrigger?.kill()
+      parallax.kill()
       st.kill()
       video.removeEventListener('loadedmetadata', onMeta)
       window.removeEventListener('touchstart', prime)
@@ -103,22 +140,25 @@ export default function ScrollVideo({ src, poster, trackRef }) {
         style={{ backgroundImage: `url(${poster})` }}
       />
       <div className="video-frame">
-        {/* Capa CSS de poster: el seguro anti-fotograma-negro de iOS */}
-        <div
-          className="video-poster"
-          style={{ backgroundImage: `url(${poster})` }}
-        />
-        <video
-          ref={videoRef}
-          className="video-el"
-          src={src}
-          poster={poster}
-          muted
-          playsInline
-          preload="auto"
-          disablePictureInPicture
-          disableRemotePlayback
-        />
+        {/* Wrapper del parallax: zoom/deriva por sección via transform */}
+        <div className="video-media" ref={mediaRef}>
+          {/* Capa CSS de poster: el seguro anti-fotograma-negro de iOS */}
+          <div
+            className="video-poster"
+            style={{ backgroundImage: `url(${poster})` }}
+          />
+          <video
+            ref={videoRef}
+            className="video-el"
+            src={src}
+            poster={poster}
+            muted
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            disableRemotePlayback
+          />
+        </div>
       </div>
     </div>
   )

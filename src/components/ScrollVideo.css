@@ -21,6 +21,13 @@
 .video-frame {
   position: absolute;
   inset: 0;
+  overflow: hidden; /* contiene el zoom del parallax */
+}
+
+.video-media {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
 }
 
 .video-poster,
