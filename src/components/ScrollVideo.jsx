@@ -42,8 +42,11 @@ export default function ScrollVideo({ src, poster, trackRef }) {
 
     const onMeta = () => {
       duration = video.duration || 0
+      // Si el usuario ya ha hecho scroll antes de que carguen los
+      // metadatos, sincroniza el objetivo con la posición actual.
+      targetTime = st.progress * duration
+      smoothedTime = targetTime
     }
-    if (video.readyState >= 1) onMeta()
     video.addEventListener('loadedmetadata', onMeta)
 
     // iOS bloquea currentTime hasta que el vídeo ha sido "activado" por un
@@ -69,6 +72,7 @@ export default function ScrollVideo({ src, poster, trackRef }) {
         if (duration) targetTime = self.progress * duration
       },
     })
+    if (video.readyState >= 1) onMeta()
 
     // El seek real va desacoplado del scroll: cada frame nos acercamos al
     // tiempo objetivo (lerp) y solo escribimos currentTime si el seek

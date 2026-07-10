@@ -13,6 +13,11 @@ export default function App() {
   const trackRef = useRef(null)
 
   useEffect(() => {
+    // La experiencia es una secuencia: siempre empieza por el principio,
+    // sin que el navegador restaure el scroll a mitad al recargar.
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+    window.scrollTo(0, 0)
+
     const getSnapPoints = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight
       if (max <= 0) return []

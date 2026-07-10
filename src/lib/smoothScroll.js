@@ -46,21 +46,31 @@ export function initSmoothScroll(getSnapPoints) {
   let lastY = lenis.scroll
   let stillFrames = 0
   let snapping = false
+  let touching = false // con el dedo en pantalla nunca se imanta
 
   const cancelSnap = () => {
     snapping = false
     stillFrames = -20 // periodo de gracia tras input del usuario
   }
+  const onTouchStart = () => {
+    touching = true
+    cancelSnap()
+  }
+  const onTouchEnd = () => {
+    touching = false
+    stillFrames = -10
+  }
   window.addEventListener('wheel', cancelSnap, { passive: true })
-  window.addEventListener('touchstart', cancelSnap, { passive: true })
-  window.addEventListener('pointerdown', cancelSnap, { passive: true })
+  window.addEventListener('touchstart', onTouchStart, { passive: true })
+  window.addEventListener('touchend', onTouchEnd, { passive: true })
+  window.addEventListener('touchcancel', onTouchEnd, { passive: true })
 
   const onMagnetTick = () => {
     const y = lenis.scroll
     const moved = Math.abs(y - lastY)
     lastY = y
 
-    if (snapping) return
+    if (snapping || touching) return
     if (moved >= MOVE_EPS) {
       stillFrames = Math.min(stillFrames, 0)
       return
@@ -80,11 +90,13 @@ export function initSmoothScroll(getSnapPoints) {
       return
     }
 
+    // lock:false — el usuario siempre puede interrumpir el imán;
+    // cancelSnap además corta nuestro estado al primer input.
     snapping = true
     lenis.scrollTo(nearest, {
       duration: Math.min(0.5, Math.max(0.25, dist / 1500)),
       easing: easeInOutCubic,
-      lock: true,
+      lock: false,
       onComplete: () => {
         snapping = false
         stillFrames = 0
@@ -98,8 +110,9 @@ export function initSmoothScroll(getSnapPoints) {
     gsap.ticker.remove(onTick)
     gsap.ticker.remove(onMagnetTick)
     window.removeEventListener('wheel', cancelSnap)
-    window.removeEventListener('touchstart', cancelSnap)
-    window.removeEventListener('pointerdown', cancelSnap)
+    window.removeEventListener('touchstart', onTouchStart)
+    window.removeEventListener('touchend', onTouchEnd)
+    window.removeEventListener('touchcancel', onTouchEnd)
     lenis.destroy()
   }
 

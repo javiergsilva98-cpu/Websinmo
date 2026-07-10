@@ -7,11 +7,12 @@
   pointer-events: none;
 }
 
+/* Todas las escenas van centradas vertical y horizontalmente */
 .scene {
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   visibility: hidden;
   opacity: 0;
@@ -19,24 +20,14 @@
 
 .scene-inner {
   width: min(92vw, 560px);
-  padding: 0 24px calc(56px + env(safe-area-inset-bottom));
+  padding: 0 24px;
   text-align: center;
   color: #fff;
   text-shadow: 0 1px 24px rgba(0, 0, 0, 0.45);
 }
 
-.scene[data-scene='hero'] .scene-inner {
-  padding-bottom: calc(88px + env(safe-area-inset-bottom));
-}
-
-/* Escenas con fotografía: contenido centrado en vertical */
-.scene--media {
-  align-items: center;
-}
-
 .scene--media .scene-inner {
   width: min(92vw, 620px);
-  padding-bottom: 0;
 }
 
 .scene-figure {
