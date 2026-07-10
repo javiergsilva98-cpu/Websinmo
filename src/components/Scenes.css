@@ -1,0 +1,165 @@
+.scenes {
+  position: fixed;
+  inset: 0;
+  height: 100vh; /* fallback */
+  height: 100svh; /* zona siempre visible: el texto nunca queda bajo la barra de URL */
+  z-index: 1;
+  pointer-events: none;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.scene-inner {
+  width: min(92vw, 560px);
+  padding: 0 24px calc(56px + env(safe-area-inset-bottom));
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 1px 24px rgba(0, 0, 0, 0.45);
+}
+
+.scene[data-scene='hero'] .scene-inner {
+  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+}
+
+.scene-kicker {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 12px;
+}
+
+.scene-title {
+  font-size: clamp(34px, 9vw, 56px);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+
+.scene-body {
+  font-size: clamp(16px, 4.2vw, 19px);
+  line-height: 1.45;
+  opacity: 0.92;
+}
+
+/* Estadísticas (m², habitaciones…) */
+.scene-stats {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: clamp(20px, 6vw, 44px);
+  margin-top: 20px;
+}
+
+.stat-value {
+  display: block;
+  font-size: clamp(30px, 8vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.stat-value small {
+  font-size: 0.5em;
+  font-weight: 600;
+  margin-left: 2px;
+  opacity: 0.85;
+}
+
+.stat-label {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* Botones de acción del cierre */
+.scene-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 26px;
+  pointer-events: auto; /* la capa de escenas es pointer-events:none */
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.24);
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: #22c15e;
+  border-color: transparent;
+}
+
+.btn-primary:hover {
+  background: #29d46b;
+}
+
+/* Indicador de scroll */
+.scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(26px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: 26px;
+  height: 42px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 14px;
+}
+
+.scroll-hint-dot {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  width: 4px;
+  height: 8px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: #fff;
+  animation: hint-drop 1.6s ease-in-out infinite;
+}
+
+@keyframes hint-drop {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}

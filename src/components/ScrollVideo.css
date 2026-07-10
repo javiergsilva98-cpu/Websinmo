@@ -1,0 +1,57 @@
+.video-stage {
+  position: fixed;
+  inset: 0;
+  height: 100vh; /* fallback */
+  height: 100lvh;
+  overflow: hidden;
+  background: #101418;
+  z-index: 0;
+}
+
+.video-backdrop {
+  position: absolute;
+  inset: -40px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(36px) brightness(0.55) saturate(1.1);
+  transform: scale(1.12);
+}
+
+/* Móvil / retrato: el vídeo vertical llena la pantalla */
+.video-frame {
+  position: absolute;
+  inset: 0;
+}
+
+.video-poster,
+.video-el {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-poster {
+  background-size: cover;
+  background-position: center;
+}
+
+.video-el {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Escritorio / apaisado: columna 9:16 centrada con letterbox difuminado,
+   nunca object-fit cover a pantalla completa (recorta demasiado). */
+@media (min-aspect-ratio: 5/6) {
+  .video-frame {
+    inset: auto;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100vh; /* fallback */
+    height: 100lvh;
+    aspect-ratio: 9 / 16;
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.55);
+  }
+}
