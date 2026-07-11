@@ -262,12 +262,13 @@
 }
 
 .btn-primary {
-  background: #22c15e;
+  background: #f5f0e8;
+  color: #101418;
   border-color: transparent;
 }
 
 .btn-primary:hover {
-  background: #29d46b;
+  background: #fff;
 }
 
 /* Indicador de scroll */
