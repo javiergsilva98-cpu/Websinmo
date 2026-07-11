@@ -160,23 +160,25 @@ export default function Scenes({ scenes, trackRef }) {
             {scene.image && variant !== 'duo' && (
               <figure className="scene-figure">{img(scene.image, variant === 'hero')}</figure>
             )}
-            {kicker}
-            <h2 className="scene-title">{scene.title}</h2>
-            {body}
+            <div className="scene-text">
+              {kicker}
+              <h2 className="scene-title">{scene.title}</h2>
+              {body}
 
-            {scene.stats && (
-              <ul className="scene-stats">
-                {scene.stats.map((s) => (
-                  <li key={s.label}>
-                    <span className="stat-value">
-                      {s.value}
-                      {s.unit && <small>{s.unit}</small>}
-                    </span>
-                    <span className="stat-label">{s.label}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+              {scene.stats && (
+                <ul className="scene-stats">
+                  {scene.stats.map((s) => (
+                    <li key={s.label}>
+                      <span className="stat-value">
+                        {s.value}
+                        {s.unit && <small>{s.unit}</small>}
+                      </span>
+                      <span className="stat-label">{s.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
             {scene.actions && (
               <div className="scene-actions">

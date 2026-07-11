@@ -23,7 +23,34 @@
   padding: 0 24px;
   text-align: center;
   color: #fff;
-  text-shadow: 0 1px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* Envuelve kicker/título/párrafo: rótulo tenue detrás que garantiza
+   contraste sea cual sea el fotograma del vídeo que quede detrás
+   (cielo claro, mármol, madera…), sin verse como una tarjeta. */
+.scene-text {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.85),
+    0 2px 14px rgba(0, 0, 0, 0.55),
+    0 10px 32px rgba(0, 0, 0, 0.4);
+}
+
+.scene-text::before {
+  content: '';
+  position: absolute;
+  inset: -10% -8%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.22) 55%,
+    rgba(0, 0, 0, 0) 78%
+  );
+  filter: blur(10px);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .scene--media .scene-inner {
@@ -103,14 +130,16 @@
   max-height: 30svh;
 }
 
-/* ── Banner (Dormitorio): foto arriba del viewport, texto centrado ── */
+/* ── Banner (Dormitorio): foto arriba del viewport, texto centrado ──
+   Centrado sobre el eje vertical pero desplazado hacia arriba, para
+   no clavarlo al borde ni confundirlo con las escenas centradas. */
 .scene--top {
-  align-items: flex-start;
+  align-items: center;
 }
 
 .scene--top .scene-inner {
   width: min(94vw, 700px);
-  padding-top: calc(env(safe-area-inset-top) + 7svh);
+  transform: translateY(-9svh);
 }
 
 .scene--top .scene-figure img {
@@ -131,13 +160,14 @@
   aspect-ratio: 47 / 68;
 }
 
-/* ── Bottom (Suite): tarjeta compacta en la parte baja del viewport ── */
+/* ── Bottom (Suite): tarjeta compacta hacia la parte baja, sin
+   clavarla del todo al borde ─────────────────────────────────────── */
 .scene--bottom {
-  align-items: flex-end;
+  align-items: center;
 }
 
 .scene--bottom .scene-inner {
-  padding-bottom: calc(6svh + env(safe-area-inset-bottom));
+  transform: translateY(9svh);
 }
 
 .scene--bottom .scene-figure img {
