@@ -34,16 +34,17 @@ const SCREENS = {
 
 const screenStyle = (s) => ({ left: s.x, top: s.y, width: s.w, height: s.h })
 
-// Esquinas reales de la pantalla "apagada" (izquierda), medidas por
-// detección de bordes sobre la foto (transición pared/mesa->negro del
-// panel, ajustando una recta a varios puntos de cada lado): el monitor
-// está girado hacia la cámara, notablemente más alto por la izquierda
-// que por la derecha. cornerPinStyle encaja el vídeo en ese cuadrilátero
-// real en vez de un rectángulo recto.
+// Esquinas de la pantalla "apagada" (izquierda): tl/bl medidas por
+// detección de bordes sobre la foto, tr/br ajustadas a mano a petición
+// (lado derecho a 225px de largo). El desplazamiento a la derecha se
+// quedó en 18px, no los 40 pedidos originalmente: con 40 el recuadro
+// invadía la pantalla contigua (la de la casa, x=503) y el scroll/rueda
+// en esa franja pasaba a controlar el vídeo equivocado — 18px es el
+// máximo que deja un margen de seguridad frente a esa otra pantalla.
 const OFF_CORNERS = {
   tl: [18, 196],
-  tr: [496, 231],
-  br: [498, 446],
+  tr: [514, 226],
+  br: [516.1, 451],
   bl: [29, 481],
 }
 // Un pelín más pequeño que la pantalla real: deja un pequeño marco de
