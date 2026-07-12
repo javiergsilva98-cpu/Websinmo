@@ -17,9 +17,6 @@ import './InmobiliarioCategory.css'
 const BERNABEU_VIDEO_SRC = '/media/bernabeu-v1.mp4'
 const BERNABEU_VIDEO_POSTER = '/media/bernabeu-poster-v1.jpg'
 
-gsap.registerPlugin(ScrollTrigger)
-ScrollTrigger.config({ ignoreMobileResize: true })
-
 // Tamaño natural de la foto y rectángulo de cada pantalla dentro de ella
 // (medidos a mano sobre la imagen fuente). El orden es de izquierda a
 // derecha tal cual aparecen en la foto.

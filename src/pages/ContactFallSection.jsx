@@ -3,8 +3,6 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './ContactFallSection.css'
 
-gsap.registerPlugin(ScrollTrigger)
-
 const HEADING = 'Hablemos'
 const FIELDS = [
   { name: 'nombre', label: 'Nombre', type: 'text' },

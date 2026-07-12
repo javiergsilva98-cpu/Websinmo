@@ -2,11 +2,10 @@ import Lenis from 'lenis'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-gsap.registerPlugin(ScrollTrigger)
-
-// La barra de URL de iOS/Android dispara resize al colapsar; sin esto
-// ScrollTrigger recalcula todo en pleno scroll y la página "salta".
-ScrollTrigger.config({ ignoreMobileResize: true })
+// gsap.registerPlugin(ScrollTrigger) y ScrollTrigger.config(...) se hacen
+// una única vez en src/main.jsx (antes se repetía en cada archivo que
+// usaba ScrollTrigger; registerPlugin es idempotente así que nunca fue un
+// bug, pero sí boilerplate duplicado sin motivo).
 
 const easeInOutCubic = (t) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2

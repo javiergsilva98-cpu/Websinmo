@@ -6,8 +6,6 @@ import { LINKS } from '../config/content.js'
 import '../styles/buttons.css'
 import './Scenes.css'
 
-gsap.registerPlugin(ScrollTrigger)
-
 const FADE = 0.04 // fracción del scroll que dura cada fundido
 
 function GalleryIcon() {

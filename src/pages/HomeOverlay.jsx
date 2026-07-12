@@ -8,8 +8,6 @@ import '../styles/buttons.css'
 import '../components/Scenes.css'
 import './HomeOverlay.css'
 
-gsap.registerPlugin(ScrollTrigger)
-
 /**
  * Overlay de la home: el logo (arriba, sobre la piedra) y los botones
  * de categoría (abajo) se funden de 0% a 80% de opacidad juntos, sin

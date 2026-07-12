@@ -3,8 +3,6 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './ScrollVideo.css'
 
-gsap.registerPlugin(ScrollTrigger)
-
 // Encuadre del vídeo por tramo de scroll: pequeños cambios de zoom y
 // deriva vertical para que el fondo no repita el mismo movimiento en
 // todas las secciones (solo transform → no cuesta rendimiento).
