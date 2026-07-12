@@ -79,7 +79,6 @@
 }
 
 .inmo-screen--contact {
-  background: #0c0e11;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,6 +90,7 @@
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 6px;
 }
 

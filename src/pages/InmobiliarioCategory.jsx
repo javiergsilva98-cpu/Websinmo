@@ -16,7 +16,10 @@ const IMG_W = 1376
 const IMG_H = 768
 const SCREENS = {
   off: { x: 20, y: 200, w: 465, h: 252 },
-  project: { x: 500, y: 207, w: 378, h: 244 },
+  // Medido por detección de bordes sobre la foto (transición
+  // brillo->oscuro), no a ojo: el rectángulo anterior invadía un poco
+  // el bisel y la pared por arriba.
+  project: { x: 503, y: 250, w: 370, h: 195 },
   contact: { x: 893, y: 200, w: 462, h: 252 },
 }
 const STOP_CENTERS = [SCREENS.off, SCREENS.project, SCREENS.contact].map(
