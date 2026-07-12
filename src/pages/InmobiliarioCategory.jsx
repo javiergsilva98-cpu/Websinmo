@@ -9,7 +9,7 @@ import ProjectScreenVideo from './ProjectScreenVideo.jsx'
 import VaseScreenViewer from './VaseScreenViewer.jsx'
 import ContactFallSection from './ContactFallSection.jsx'
 import { cornerPinStyle, shrinkCorners } from '../lib/cornerPin.js'
-import { VASE_MODEL_SRC } from '../config/vase.js'
+import { VASE_MODEL_SRC, VASE_SCREEN_CORNERS } from '../config/vase.js'
 import './InmobiliarioCategory.css'
 
 // Vídeo de la segunda pantalla (la que estaba libre): el mismo trato
@@ -51,23 +51,10 @@ const OFF_CORNERS = {
 // justo hasta el borde.
 const offScreenStyle = cornerPinStyle(shrinkCorners(OFF_CORNERS, 0.92))
 
-// Esquinas reales de la tercera pantalla, por ajuste de recta (mínimos
-// cuadrados) a cada uno de los 4 bordes por separado sobre zonas limpias
-// de la foto, con el umbral de luminancia correcto: el borde exterior
-// del bisel es gris oscuro (no negro puro), así que un umbral
-// demasiado estricto detectaba la transición pantalla->bisel en vez de
-// bisel->pared y el recuadro se quedaba corto por el lado derecho
-// (visible en captura: quedaba bisel del monitor fuera del recuadro).
-// El monitor está girado, así que no es un rectángulo recto sino un
-// cuadrilátero: cornerPinStyle calcula la matrix3d que deforma el div
-// plano hasta encajar exactamente en ese plano inclinado.
-const VASE_CORNERS = {
-  tl: [878, 231],
-  tr: [1351, 194],
-  br: [1344, 472],
-  bl: [875, 457],
-}
-const vaseScreenStyle = cornerPinStyle(VASE_CORNERS)
+// Esquinas reales de la tercera pantalla (ver config/vase.js, compartidas
+// con /3D): cornerPinStyle calcula la matrix3d que deforma el div plano
+// hasta encajar exactamente en ese plano inclinado.
+const vaseScreenStyle = cornerPinStyle(VASE_SCREEN_CORNERS)
 
 const STOP_CENTERS = [
   offScreenStyle.left + offScreenStyle.width / 2,

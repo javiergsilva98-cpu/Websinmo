@@ -8,14 +8,17 @@
   justify-content: center;
 }
 
-/* Proporción real de la pantalla del monitor, medida a mano sobre la
-   foto (ancho ~379.6px, alto ~227.3px en píxeles de foto — no es un
-   cuadrado): el recuadro del modelo respeta esa forma en vez de
-   estirarse a lo que sea la ventana, con fondo negro alrededor. */
+/* Tamaño fijo "de foto" (el bounding box del cuadrilátero real de la
+   pantalla): no se estira ni se recorta, solo se escala uniformemente
+   por JS (ver Vase3DPage.jsx) para aprovechar el viewport disponible. */
 .vase3d-page-frame {
-  aspect-ratio: 379.6 / 227.3;
-  width: min(92vw, calc(85svh * 379.6 / 227.3));
-  max-height: 85svh;
+  position: relative;
+  flex: none;
+}
+
+.vase3d-page-tilt {
+  position: absolute;
+  inset: 0;
 }
 
 .vase3d-page-back {
