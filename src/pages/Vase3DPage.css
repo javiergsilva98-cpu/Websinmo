@@ -3,6 +3,19 @@
   inset: 0;
   height: 100svh;
   background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Proporción real de la pantalla del monitor, medida a mano sobre la
+   foto (ancho ~379.6px, alto ~227.3px en píxeles de foto — no es un
+   cuadrado): el recuadro del modelo respeta esa forma en vez de
+   estirarse a lo que sea la ventana, con fondo negro alrededor. */
+.vase3d-page-frame {
+  aspect-ratio: 379.6 / 227.3;
+  width: min(92vw, calc(85svh * 379.6 / 227.3));
+  max-height: 85svh;
 }
 
 .vase3d-page-back {
