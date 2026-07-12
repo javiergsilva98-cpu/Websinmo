@@ -11,7 +11,6 @@ export const HOME_SCROLL_LENGTH_LVH = 300
 
 // Fracción del progreso del vídeo en la que el portátil queda
 // completamente abierto (medido a fotograma: ~8.9s de 10s = 0.89).
-// Los botones de categoría empiezan a aparecer justo antes de este
-// punto y terminan de aparecer justo después.
+// Los botones de categoría se encienden en cuanto el scroll cruza
+// este punto.
 export const HOME_REVEAL_FROM = 0.84
-export const HOME_REVEAL_TO = 0.9
