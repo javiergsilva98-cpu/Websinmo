@@ -8,15 +8,13 @@ import { VIDEO_SRC, VIDEO_POSTER } from '../config/content.js'
 import ProjectScreenVideo from './ProjectScreenVideo.jsx'
 import VaseScreenViewer from './VaseScreenViewer.jsx'
 import { cornerPinStyle } from '../lib/cornerPin.js'
+import { VASE_MODEL_SRC } from '../config/vase.js'
 import './InmobiliarioCategory.css'
 
 // Vídeo de la segunda pantalla (la que estaba libre): el mismo trato
 // que el de la casa, pero sin página propia todavía (sin `to`, no navega).
 const BERNABEU_VIDEO_SRC = '/media/bernabeu-v1.mp4'
 const BERNABEU_VIDEO_POSTER = '/media/bernabeu-poster-v1.jpg'
-
-// Modelo 3D de la tercera pantalla (antes el formulario de contacto).
-const VASE_MODEL_SRC = '/models/vase-v1.glb'
 
 gsap.registerPlugin(ScrollTrigger)
 ScrollTrigger.config({ ignoreMobileResize: true })
@@ -49,16 +47,19 @@ const OFF_CORNERS = {
 }
 const offScreenStyle = cornerPinStyle(OFF_CORNERS)
 
-// Esquinas reales de la tercera pantalla, medidas a mano sobre la foto
-// (píxeles de la imagen fuente): el monitor está girado, así que no es
-// un rectángulo recto sino un cuadrilátero. cornerPinStyle calcula la
+// Esquinas reales de la tercera pantalla, medidas por detección de
+// bordes sobre la foto (transición brillo->oscuro en columnas/filas
+// finas cerca de cada esquina, no un ajuste de recta a todo el borde:
+// el monitor es curvo y una recta única por todo el ancho arrastraba
+// ruido de esa curvatura). El monitor está girado, así que no es un
+// rectángulo recto sino un cuadrilátero: cornerPinStyle calcula la
 // matrix3d que deforma el div plano hasta encajar exactamente en ese
-// plano inclinado, en vez de superponerlo recto.
+// plano inclinado, en vez de superponerlo recto o con márgenes de más.
 const VASE_CORNERS = {
-  tl: [874, 204],
-  tr: [1296, 181],
-  br: [1325, 478],
-  bl: [875, 458],
+  tl: [877, 230],
+  tr: [1315, 199],
+  br: [1321, 471],
+  bl: [876, 449],
 }
 const vaseScreenStyle = cornerPinStyle(VASE_CORNERS)
 
