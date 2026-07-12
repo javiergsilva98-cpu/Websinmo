@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { initSmoothScroll } from '../lib/smoothScroll.js'
 import { CATEGORIES } from '../config/catalog.js'
 import ProjectScreenVideo from './ProjectScreenVideo.jsx'
+import { cornerPinStyle } from '../lib/cornerPin.js'
 import './InmobiliarioCategory.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -21,13 +22,28 @@ const SCREENS = {
   // brillo->oscuro), no a ojo: el rectángulo anterior invadía un poco
   // el bisel y la pared por arriba.
   project: { x: 503, y: 240, w: 370, h: 195 },
-  contact: { x: 893, y: 200, w: 462, h: 252 },
 }
-const STOP_CENTERS = [SCREENS.off, SCREENS.project, SCREENS.contact].map(
-  (s) => s.x + s.w / 2,
-)
 
 const screenStyle = (s) => ({ left: s.x, top: s.y, width: s.w, height: s.h })
+
+// Esquinas reales de la pantalla de contacto, medidas a mano sobre la
+// foto (píxeles de la imagen fuente): el monitor está girado, así que
+// no es un rectángulo recto sino un cuadrilátero. cornerPinStyle calcula
+// la matrix3d que deforma el div plano del formulario hasta encajar
+// exactamente en ese plano inclinado, en vez de superponerlo recto.
+const CONTACT_CORNERS = {
+  tl: [874, 204],
+  tr: [1296, 181],
+  br: [1325, 478],
+  bl: [875, 458],
+}
+const contactScreenStyle = cornerPinStyle(CONTACT_CORNERS)
+
+const STOP_CENTERS = [
+  SCREENS.off.x + SCREENS.off.w / 2,
+  SCREENS.project.x + SCREENS.project.w / 2,
+  contactScreenStyle.left + contactScreenStyle.width / 2,
+]
 
 /**
  * /inmobiliario — recorrido horizontal por una foto fija de tres
@@ -189,7 +205,7 @@ export default function InmobiliarioCategory() {
             <ProjectScreenVideo project={project} style={screenStyle(SCREENS.project)} />
           )}
 
-          <div className="inmo-screen inmo-screen--contact" style={screenStyle(SCREENS.contact)}>
+          <div className="inmo-screen inmo-screen--contact" style={contactScreenStyle}>
             <form className="inmo-contact-form" onSubmit={(e) => e.preventDefault()}>
               <p className="inmo-contact-title">Contacto</p>
               <input type="text" placeholder="Nombre" />
