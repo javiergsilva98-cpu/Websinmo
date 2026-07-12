@@ -6,15 +6,18 @@ import { CATEGORIES } from '../config/catalog.js'
 import { HOME_REVEAL_FROM, HOME_REVEAL_TO } from '../config/home.js'
 import '../styles/buttons.css'
 import '../components/Scenes.css'
+import './HomeOverlay.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
 /**
- * Overlay de la home: los botones de categoría se funden de 0% a 80%
- * de opacidad (sin desplazamiento) exactamente durante el tramo del
- * vídeo en el que el portátil se abre (ver HOME_REVEAL_FROM/TO en
- * config/home.js) — es una transición ligada al scroll, no una
- * animación por tiempo: si el usuario retrocede, se desvanecen igual.
+ * Overlay de la home: el logo y los botones de categoría se funden de
+ * 0% a 80% de opacidad juntos (sin desplazamiento) exactamente
+ * durante el tramo del vídeo en el que el portátil se abre (ver
+ * HOME_REVEAL_FROM/TO en config/home.js) — es una transición ligada
+ * al scroll, no una animación por tiempo: si el usuario retrocede, se
+ * desvanecen igual. Comparten el mismo contenedor (.home-categories),
+ * así que un único tween basta para animar ambos a la vez.
  */
 export default function HomeOverlay({ trackRef }) {
   const rootRef = useRef(null)
@@ -59,6 +62,7 @@ export default function HomeOverlay({ trackRef }) {
     <div className="scenes" ref={rootRef}>
       <section className="scene scene--bottom home-categories">
         <div className="scene-inner">
+          <img className="home-logo" src="/img/logo-v1.png" alt="Logo" />
           <div className="scene-actions">
             {CATEGORIES.map((cat) => (
               <Link key={cat.slug} className="btn btn--rect" to={`/${cat.slug}`}>

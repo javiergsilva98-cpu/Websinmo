@@ -1,0 +1,6 @@
+.home-logo {
+  display: block;
+  width: clamp(56px, 14vw, 84px);
+  height: auto;
+  margin: 0 auto 18px;
+}
