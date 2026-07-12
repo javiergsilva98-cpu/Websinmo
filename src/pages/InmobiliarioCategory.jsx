@@ -48,19 +48,21 @@ const OFF_CORNERS = {
 }
 const offScreenStyle = cornerPinStyle(OFF_CORNERS)
 
-// Esquinas reales de la tercera pantalla, medidas por detección de
-// bordes sobre la foto (transición brillo->oscuro en columnas/filas
-// finas cerca de cada esquina, no un ajuste de recta a todo el borde:
-// el monitor es curvo y una recta única por todo el ancho arrastraba
-// ruido de esa curvatura). El monitor está girado, así que no es un
-// rectángulo recto sino un cuadrilátero: cornerPinStyle calcula la
-// matrix3d que deforma el div plano hasta encajar exactamente en ese
-// plano inclinado, en vez de superponerlo recto o con márgenes de más.
+// Esquinas reales de la tercera pantalla, por ajuste de recta (mínimos
+// cuadrados) a cada uno de los 4 bordes por separado sobre zonas limpias
+// de la foto, con el umbral de luminancia correcto: el borde exterior
+// del bisel es gris oscuro (no negro puro), así que un umbral
+// demasiado estricto detectaba la transición pantalla->bisel en vez de
+// bisel->pared y el recuadro se quedaba corto por el lado derecho
+// (visible en captura: quedaba bisel del monitor fuera del recuadro).
+// El monitor está girado, así que no es un rectángulo recto sino un
+// cuadrilátero: cornerPinStyle calcula la matrix3d que deforma el div
+// plano hasta encajar exactamente en ese plano inclinado.
 const VASE_CORNERS = {
-  tl: [877, 230],
-  tr: [1315, 199],
-  br: [1321, 471],
-  bl: [876, 449],
+  tl: [878, 231],
+  tr: [1351, 194],
+  br: [1344, 472],
+  bl: [875, 457],
 }
 const vaseScreenStyle = cornerPinStyle(VASE_CORNERS)
 
