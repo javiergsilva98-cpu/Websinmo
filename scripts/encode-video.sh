@@ -2,7 +2,7 @@
 #
 # Recodifica un vídeo para scroll-scrubbing fiable en iOS/Android/desktop.
 #
-#   ./scripts/encode-video.sh entrada.mov [nombre-base] [version]
+#   ./scripts/encode-video.sh entrada.mov [nombre-base] [version] [recorte-inicio-seg]
 #
 # Genera:
 #   public/media/<nombre-base>-v<N>.mp4        (vídeo scrubbable)
@@ -36,17 +36,19 @@
 
 set -euo pipefail
 
-INPUT="${1:?Uso: $0 entrada.mov [nombre-base] [version]}"
+INPUT="${1:?Uso: $0 entrada.mov [nombre-base] [version] [recorte-inicio-seg]}"
 NAME="${2:-hero}"
 VERSION="${3:-1}"
+TRIM_START="${4:-0}"
 OUT_DIR="$(dirname "$0")/../public/media"
 OUT_VIDEO="$OUT_DIR/${NAME}-v${VERSION}.mp4"
 OUT_POSTER="$OUT_DIR/${NAME}-poster-v${VERSION}.jpg"
 
 mkdir -p "$OUT_DIR"
 
+# -ss ANTES de -i: seek rápido de descarte, no decodifica lo recortado.
 # 1080 de ancho máximo (vídeo vertical). 1080x1920@60 cabe justo en level 4.2.
-ffmpeg -y -i "$INPUT" \
+ffmpeg -y -ss "$TRIM_START" -i "$INPUT" \
   -vf "minterpolate=fps=60:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1,scale='min(1080,iw)':-2" \
   -c:v libx264 -profile:v high -level:v 4.2 -pix_fmt yuv420p \
   -bf 0 -g 8 -keyint_min 8 -sc_threshold 0 \
