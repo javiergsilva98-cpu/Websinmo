@@ -9,10 +9,8 @@ export const VIDEO_POSTER = '/media/hero-poster-v1.jpg'
 // Más longitud = scrubbing más lento y suave.
 export const SCROLL_LENGTH_LVH = 800
 
-// Enlaces de los botones de acción.
+// Enlaces externos de los botones de acción.
 export const LINKS = {
-  // TODO: sustituir por la URL real del portfolio/otros proyectos
-  otherProjects: '#',
   instagram: 'https://www.instagram.com/doubles.interiorismo?igsh=MTJwM3BrNjd5Y3p1bQ==',
 }
 

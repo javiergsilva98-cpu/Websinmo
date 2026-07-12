@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { LINKS } from '../config/content.js'
@@ -174,9 +175,9 @@ export default function Scenes({ scenes, trackRef }) {
 
             {scene.actions && (
               <div className="scene-actions">
-                <a className="btn btn-primary" href={LINKS.otherProjects} target="_blank" rel="noreferrer">
+                <Link className="btn btn-primary" to="/inmobiliario">
                   <GalleryIcon /> Ver otros proyectos
-                </a>
+                </Link>
                 <a className="btn" href={LINKS.instagram} target="_blank" rel="noreferrer">
                   <InstagramIcon /> Instagram
                 </a>
