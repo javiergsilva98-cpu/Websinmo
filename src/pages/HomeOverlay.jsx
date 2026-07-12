@@ -38,9 +38,9 @@ export default function HomeOverlay({ trackRef }) {
         },
       })
 
-      // Sin fundido ni desplazamiento: se encienden de golpe en cuanto
-      // el scroll cruza el punto de revelado.
-      tl.set(categories, { autoAlpha: 1 }, HOME_REVEAL_FROM)
+      // Sin fundido ni desplazamiento: saltan de 0% a 80% de opacidad
+      // de golpe en cuanto el scroll cruza el punto de revelado.
+      tl.set(categories, { autoAlpha: 0.8 }, HOME_REVEAL_FROM)
       // Ancla el final del timeline en scroll=1: sin esto, la duración
       // total la marcaría el único .set() de arriba (en 0.84) y el
       // progreso del scroll (0→1) se reescalaría sobre ese 0.84 en vez
@@ -58,7 +58,7 @@ export default function HomeOverlay({ trackRef }) {
         <div className="scene-inner">
           <div className="scene-actions">
             {CATEGORIES.map((cat) => (
-              <Link key={cat.slug} className="btn" to={`/${cat.slug}`}>
+              <Link key={cat.slug} className="btn btn--rect" to={`/${cat.slug}`}>
                 {cat.title}
               </Link>
             ))}

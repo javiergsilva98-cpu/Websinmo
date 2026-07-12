@@ -30,3 +30,8 @@
 .btn-primary:hover {
   background: #fff;
 }
+
+/* Variante rectangular (esquinas redondeadas, no píldora) */
+.btn--rect {
+  border-radius: 12px;
+}
