@@ -1,0 +1,105 @@
+.inmo2-viewport {
+  position: fixed;
+  inset: 0;
+  height: 100vh; /* fallback */
+  height: 100svh;
+  overflow: hidden;
+  background: #101418;
+}
+
+.inmo2-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 720px;
+  height: 1280px;
+  will-change: transform;
+}
+
+.inmo2-bg-poster,
+.inmo2-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.inmo2-bg-poster {
+  background-size: cover;
+  background-position: center;
+}
+
+.inmo2-bg-video {
+  object-fit: cover;
+}
+
+.inmo2-back {
+  position: fixed;
+  top: calc(18px + env(safe-area-inset-top));
+  left: 18px;
+  z-index: 5;
+  color: #fff;
+  opacity: 0.75;
+  text-decoration: none;
+  font-size: 14px;
+  background: rgba(16, 20, 24, 0.55);
+  padding: 6px 12px;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+}
+
+.inmo2-back:hover {
+  opacity: 1;
+}
+
+/* Rectángulo exterior sin inclinar (bounding box axis-aligned de
+   cornerPinStyle): solo posición/tamaño, para que overflow:hidden
+   recorte justo el cuadrilátero real dibujado dentro. */
+.inmo2-screen {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+/* Div interior con el matrix3d que inclina el contenido hasta encajar
+   en el cuadrilátero real de la pantalla. El fondo negro va AQUÍ, nunca
+   en .inmo2-screen (el exterior sin inclinar): si fuera al revés se ve
+   como un rectángulo negro que sobresale por los lados donde el
+   cuadrilátero real no llega — el mismo bug ya resuelto en
+   InmobiliarioCategory.css para la pantalla del jarrón. */
+.inmo2-tilt {
+  position: absolute;
+  inset: 0;
+  background: #000;
+}
+
+.inmo2-screen-poster,
+.inmo2-screen-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.inmo2-screen-poster {
+  background-size: cover;
+  background-position: center;
+}
+
+.inmo2-screen-video {
+  object-fit: cover;
+}
+
+.inmo2-screen-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px 12px 8px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-align: center;
+}

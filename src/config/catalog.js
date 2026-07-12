@@ -21,6 +21,23 @@ export const CATEGORIES = [
     ],
   },
   {
+    // Duplicado de "inmobiliario" solo para probar, en móvil, un fondo
+    // de vídeo scroll-scrubbed en vez de la foto fija (ver
+    // InmobiliarioCategory2 / InmobiliarioMobileRecorrido). En
+    // escritorio es la misma página que "inmobiliario", por eso
+    // reutiliza el mismo proyecto.
+    slug: 'inmobiliario2',
+    title: 'Inmobiliario (prueba)',
+    description: 'Prueba: fondo de vídeo scroll-scrubbed en móvil.',
+    projects: [
+      {
+        slug: 'una-casa-frente-al-mar',
+        title: 'Una casa frente al mar',
+        thumbnail: '/img/salon-v1.jpg',
+      },
+    ],
+  },
+  {
     slug: 'varios',
     title: 'Varios',
     description: 'Otros proyectos.',
