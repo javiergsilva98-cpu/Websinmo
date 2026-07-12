@@ -125,7 +125,7 @@ export default function InmobiliarioCategory() {
     // alcance por swipe; este mapeo es directo (sin inercia), así que
     // se amplifica para que un arrastre normal baste para cruzar el
     // radio de captura del imán y llegar a la siguiente pantalla.
-    const HORIZ_SENSITIVITY = 4.5
+    const HORIZ_SENSITIVITY = 6.75 // 4.5 + 50%
     let touchStartX = 0
     let touchStartY = 0
     let touchLastX = 0
