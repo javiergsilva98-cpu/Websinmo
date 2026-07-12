@@ -53,16 +53,34 @@
   text-decoration: none;
 }
 
-.inmo-screen--project img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.inmo-project-media {
+  position: absolute;
+  inset: 0;
   transition: transform 0.4s ease;
 }
 
-.inmo-screen--project:hover img {
+.inmo-screen--project:hover .inmo-project-media {
   transform: scale(1.05);
+}
+
+/* Capa de poster CSS detrás del <video>: en iOS el atributo poster se
+   descarta al primer seek y deja negro si el frame no ha decodificado
+   aún; esta capa nunca se borra, así que nunca hay fondo negro. */
+.inmo-project-poster,
+.inmo-project-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.inmo-project-poster {
+  background-size: cover;
+  background-position: center;
+}
+
+.inmo-project-video {
+  object-fit: cover;
 }
 
 .inmo-screen-title {
@@ -85,22 +103,22 @@
 }
 
 .inmo-contact-form {
-  width: 100%;
-  height: 100%;
-  padding: 14px 16px;
+  width: 70%;
+  max-width: 220px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .inmo-contact-title {
   color: #f5f0e8;
-  font-size: 12px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  text-align: center;
 }
 
 .inmo-contact-form input,
@@ -108,11 +126,11 @@
   width: 100%;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 4px;
+  border-radius: 3px;
   color: #fff;
-  font-size: 11px;
+  font-size: 8px;
   font-family: inherit;
-  padding: 5px 8px;
+  padding: 3px 6px;
   resize: none;
 }
 
@@ -122,14 +140,14 @@
 }
 
 .inmo-contact-form button {
-  align-self: flex-start;
+  align-self: center;
   margin-top: 2px;
-  padding: 5px 14px;
+  padding: 3px 12px;
   border-radius: 999px;
   border: none;
   background: #f5f0e8;
   color: #101418;
-  font-size: 11px;
+  font-size: 8px;
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;

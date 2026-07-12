@@ -63,7 +63,7 @@ export default function HomeOverlay({ trackRef }) {
   return (
     <div className="scenes" ref={rootRef}>
       <div className="home-logo-wrap">
-        <img className="home-logo" src="/img/logo-v1.png" alt="Logo" />
+        <img className="home-logo" src="/img/logo-v2.png" alt="Logo" />
       </div>
 
       <section className="scene scene--bottom home-categories">

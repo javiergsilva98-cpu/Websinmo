@@ -4,6 +4,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { initSmoothScroll } from '../lib/smoothScroll.js'
 import { CATEGORIES } from '../config/catalog.js'
+import ProjectScreenVideo from './ProjectScreenVideo.jsx'
 import './InmobiliarioCategory.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -38,12 +39,14 @@ const screenStyle = (s) => ({ left: s.x, top: s.y, width: s.w, height: s.h })
 export default function InmobiliarioCategory() {
   const trackRef = useRef(null)
   const canvasRef = useRef(null)
+  const viewportRef = useRef(null)
   const project = CATEGORIES.find((c) => c.slug === 'inmobiliario')?.projects[0]
 
   useEffect(() => {
     const track = trackRef.current
     const canvas = canvasRef.current
-    if (!track || !canvas) return
+    const viewportEl = viewportRef.current
+    if (!track || !canvas || !viewportEl) return
 
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
     window.scrollTo(0, 0)
@@ -64,9 +67,17 @@ export default function InmobiliarioCategory() {
     // es más ancha que alta que la foto) y desplaza en X para centrar
     // la pantalla objetivo. Se recalcula cada frame porque depende del
     // tamaño de ventana en vivo (rota/resize).
+    //
+    // OJO: se mide el propio contenedor (clientWidth/Height), NO
+    // window.innerWidth/innerHeight. En iOS Safari, innerHeight puede
+    // reportar el "viewport grande" (barra de direcciones oculta)
+    // mientras el contenedor está pintado a 100svh (viewport pequeño,
+    // barra visible) — si se usa innerHeight para calcular la escala,
+    // el canvas queda más grande de lo que cabe en el contenedor real
+    // y la foto se desborda por los lados.
     const applyTransform = (progress) => {
-      const vw = window.innerWidth
-      const vh = window.innerHeight
+      const vw = viewportEl.clientWidth
+      const vh = viewportEl.clientHeight
       const scale = Math.max(vh / IMG_H, vw / IMG_W)
 
       let cx
@@ -118,7 +129,7 @@ export default function InmobiliarioCategory() {
         ← Proyectos
       </Link>
 
-      <div className="inmo-viewport">
+      <div className="inmo-viewport" ref={viewportRef}>
         <div className="inmo-canvas" ref={canvasRef}>
           <img
             className="inmo-photo"
@@ -129,14 +140,7 @@ export default function InmobiliarioCategory() {
           />
 
           {project && (
-            <Link
-              to={`/inmobiliario/${project.slug}`}
-              className="inmo-screen inmo-screen--project"
-              style={screenStyle(SCREENS.project)}
-            >
-              <img src={project.thumbnail} alt={project.title} />
-              <span className="inmo-screen-title">{project.title}</span>
-            </Link>
+            <ProjectScreenVideo project={project} style={screenStyle(SCREENS.project)} />
           )}
 
           <div className="inmo-screen inmo-screen--contact" style={screenStyle(SCREENS.contact)}>
