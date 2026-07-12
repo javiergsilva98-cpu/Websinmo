@@ -29,7 +29,28 @@
 .fall-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 22px;
+}
+
+.fall-field {
+  position: relative;
+}
+
+/* Etiqueta en forma de pastilla que "aterriza" solapando el borde
+   superior de su caja, como si la gravedad la hubiera dejado caer ahí. */
+.fall-label {
+  position: absolute;
+  left: 14px;
+  top: -11px;
+  z-index: 2;
+  background: #101418;
+  color: #f5f0e8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
 }
 
 .fall-box input,
@@ -42,13 +63,8 @@
   color: #101418;
   font-size: 15px;
   font-family: inherit;
-  padding: 12px 14px;
+  padding: 16px 14px 12px;
   resize: none;
-}
-
-.fall-box input::placeholder,
-.fall-box textarea::placeholder {
-  color: rgba(16, 20, 24, 0.4);
 }
 
 .fall-box--button {
