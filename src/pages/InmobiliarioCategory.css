@@ -32,7 +32,14 @@
   opacity: 0.75;
   text-decoration: none;
   font-size: 14px;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+  /* Píldora oscura en vez de solo texto+sombra: al ser fixed, este
+     enlace queda visible también sobre la sección blanca del
+     formulario al final del scroll, donde texto blanco sin fondo
+     desaparecería. */
+  background: rgba(16, 20, 24, 0.55);
+  padding: 6px 12px;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
 }
 
 .inmo-back:hover {
@@ -94,6 +101,9 @@
   font-size: 13px;
   font-weight: 700;
   letter-spacing: -0.01em;
+  /* Centrado: alineado a la izquierda se salía del encuadre en las
+     pantallas laterales en móvil, donde la cámara recorta ese lado. */
+  text-align: center;
 }
 
 .inmo-screen--vase {

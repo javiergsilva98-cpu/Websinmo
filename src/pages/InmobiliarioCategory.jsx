@@ -7,6 +7,7 @@ import { CATEGORIES } from '../config/catalog.js'
 import { VIDEO_SRC, VIDEO_POSTER } from '../config/content.js'
 import ProjectScreenVideo from './ProjectScreenVideo.jsx'
 import VaseScreenViewer from './VaseScreenViewer.jsx'
+import ContactFallSection from './ContactFallSection.jsx'
 import { cornerPinStyle } from '../lib/cornerPin.js'
 import { VASE_MODEL_SRC } from '../config/vase.js'
 import './InmobiliarioCategory.css'
@@ -144,10 +145,19 @@ export default function InmobiliarioCategory() {
     }
     gsap.ticker.add(onTick)
 
-    // Tres paradas con imán: apagada / proyecto / modelo 3D.
+    // Tres paradas con imán: apagada / proyecto / modelo 3D. El recorrido
+    // ya no es todo el documento — después va la sección blanca del
+    // formulario (scroll normal, sin imán) — así que el máximo se calcula
+    // sobre el propio track del paneo, no sobre document.scrollHeight.
+    const trackMax = () => track.offsetTop + track.offsetHeight - window.innerHeight
     const getSnapPoints = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight
+      const max = trackMax()
       if (max <= 0) return []
+      // Una vez el usuario ha scrolleado más allá del recorrido (dentro
+      // de la sección del formulario), sin imán: si no, la parada del
+      // jarrón seguiría "atrayendo" el scroll hacia arriba cada vez que
+      // el usuario se detiene a leer el formulario.
+      if (window.scrollY > max + 40) return []
       return [0, max * 0.5, max]
     }
     const { lenis, destroy } = initSmoothScroll(getSnapPoints)
@@ -188,7 +198,10 @@ export default function InmobiliarioCategory() {
         e.preventDefault()
         const stepX = touchLastX - t.clientX // arrastrar a la izquierda avanza
         touchLastX = t.clientX
-        const max = document.documentElement.scrollHeight - window.innerHeight
+        // Acotado al propio recorrido, no a todo el documento: el swipe
+        // horizontal es el gesto para pasar de pantalla dentro del
+        // paneo, no para colarse en la sección del formulario de abajo.
+        const max = trackMax()
         const next = Math.min(max, Math.max(0, lenis.scroll + stepX * HORIZ_SENSITIVITY))
         lenis.scrollTo(next, { immediate: true })
       }
@@ -248,6 +261,10 @@ export default function InmobiliarioCategory() {
 
       {/* Track invisible: su altura define la longitud del recorrido */}
       <div ref={trackRef} className="scroll-track" style={{ height: '400lvh' }} />
+
+      {/* Tras el recorrido por los monitores, scroll normal (sin paneo)
+          hasta el formulario de contacto en pantalla blanca. */}
+      <ContactFallSection />
     </>
   )
 }
