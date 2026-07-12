@@ -13,17 +13,16 @@ const FIELDS = [
 
 /**
  * Última sección de /inmobiliario, después del recorrido por los tres
- * monitores: una pantalla blanca normal (scroll de verdad, no paneo)
- * con un formulario de contacto. Animación de entrada en dos tramos:
+ * monitores: una pantalla blanca normal (scroll de verdad, no paneo,
+ * sin pin — la sección ocupa solo su altura natural, nada de recorrido
+ * extra) con un formulario de contacto.
  *
- *  1. Mientras la sección sube y queda encuadrada (1 altura de
- *     viewport, sin pin): el título entra letra a letra y las cajas de
- *     los campos se asientan (el "suelo").
- *  2. Ya con la sección fijada en pantalla (pin), un recorrido de scroll
- *     mucho más largo controla la caída lenta de las etiquetas de cada
- *     campo. Al llegar al final de ese recorrido, el último rebote de
- *     aterrizaje se dispara como animación por TIEMPO, no por scroll:
- *     se ve aunque el usuario ya se haya parado justo al llegar abajo.
+ * La animación de entrada es independiente del scroll: se dispara una
+ * sola vez, fluida, en cuanto la sección está ~75% visible, y a partir
+ * de ahí corre sola por tiempo (no se controla arrastrando el scroll).
+ *  1. El título entra letra a letra.
+ *  2. Las cajas de los campos se asientan (el "suelo").
+ *  3. Las etiquetas caen y aterrizan sobre su caja, con rebote final.
  */
 export default function ContactFallSection() {
   const sectionRef = useRef(null)
@@ -41,54 +40,33 @@ export default function ContactFallSection() {
       gsap.set(boxes, { y: 24, opacity: 0 })
       gsap.set(labels, { y: -170, opacity: 0, rotate: () => gsap.utils.random(-16, 16) })
 
-      // Tramo 1: título + cajas, mientras la sección sube a su sitio.
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: 'top bottom',
-          end: 'top top',
-          scrub: true,
-        },
+      const tl = gsap.timeline({ paused: true })
+
+      tl.to(letters, {
+        y: 0,
+        opacity: 1,
+        rotate: 0,
+        duration: 0.6,
+        stagger: 0.04,
+        ease: 'bounce.out',
       })
-        .to(letters, {
-          y: 0,
-          opacity: 1,
-          rotate: 0,
-          duration: 1,
-          stagger: 0.05,
-          ease: 'bounce.out',
-        })
-        .to(boxes, { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power2.out' }, 0.3)
+      tl.to(boxes, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' }, 0.25)
+      // Caída de las etiquetas, sin rebote todavía.
+      tl.to(
+        labels,
+        { y: 0, opacity: 1, rotate: 0, duration: 0.7, stagger: 0.12, ease: 'power2.in' },
+        0.55,
+      )
+      // Rebote de aterrizaje: un pequeño salto y el rebote final.
+      tl.to(labels, { y: -14, duration: 0.13, ease: 'power2.out', stagger: 0.05 })
+      tl.to(labels, { y: 0, duration: 0.6, ease: 'bounce.out', stagger: 0.05 }, '>-0.02')
 
-      // Rebote final de aterrizaje: por tiempo, no por scroll — se
-      // dispara una sola vez al llegar al final y se rearma si el
-      // usuario retrocede y vuelve a llegar.
-      let bounced = false
-      const landingBounce = gsap
-        .timeline({ paused: true })
-        .to(labels, { y: -14, duration: 0.13, ease: 'power2.out', stagger: 0.05 })
-        .to(labels, { y: 0, duration: 0.65, ease: 'bounce.out', stagger: 0.05 }, '>-0.02')
-
-      // Tramo 2: sección fijada (pin) durante un recorrido de scroll
-      // mucho más largo (2.5 alturas de viewport) que controla, lenta y
-      // deliberadamente, la caída de las etiquetas.
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: () => `+=${window.innerHeight * 2.5}`,
-          scrub: true,
-          pin: true,
-          onUpdate: (self) => {
-            if (self.progress >= 1 && !bounced) {
-              bounced = true
-              landingBounce.restart()
-            } else if (self.progress < 1) {
-              bounced = false
-            }
-          },
-        },
-      }).to(labels, { y: 0, opacity: 1, rotate: 0, duration: 3, stagger: 0.5, ease: 'power1.in' })
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top 25%', // ~75% de la sección ya visible
+        once: true,
+        onEnter: () => tl.play(),
+      })
     }, section)
 
     return () => ctx.revert()
