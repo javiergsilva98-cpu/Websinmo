@@ -84,17 +84,21 @@ export default function ContactFallSection() {
         <form className="fall-form" onSubmit={(e) => e.preventDefault()}>
           {FIELDS.map((field) => (
             <div className="fall-field" key={field.name}>
-              <span className="fall-label">{field.label}</span>
+              <label className="fall-label" htmlFor={field.name}>
+                {field.label}
+              </label>
               <div className="fall-box">
-                <input type={field.type} name={field.name} />
+                <input id={field.name} type={field.type} name={field.name} />
               </div>
             </div>
           ))}
 
           <div className="fall-field">
-            <span className="fall-label">Mensaje</span>
+            <label className="fall-label" htmlFor="mensaje">
+              Mensaje
+            </label>
             <div className="fall-box">
-              <textarea name="mensaje" rows={4} />
+              <textarea id="mensaje" name="mensaje" rows={4} />
             </div>
           </div>
 
