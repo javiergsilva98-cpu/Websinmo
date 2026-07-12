@@ -18,13 +18,8 @@ export default function Home() {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
     window.scrollTo(0, 0)
 
-    // Dos únicos puntos de imán: arriba (intro) y abajo (categorías reveladas).
-    const getSnapPoints = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight
-      if (max <= 0) return []
-      return [0, max]
-    }
-    const { destroy } = initSmoothScroll(getSnapPoints)
+    // Sin imán: solo scroll suave (Lenis), el scrubbing queda libre.
+    const { destroy } = initSmoothScroll(() => [])
     return destroy
   }, [])
 
