@@ -110,7 +110,51 @@ export default function InmobiliarioCategory() {
       if (max <= 0) return []
       return [0, max * 0.5, max]
     }
-    const { destroy } = initSmoothScroll(getSnapPoints)
+    const { lenis, destroy } = initSmoothScroll(getSnapPoints)
+
+    // Swipe horizontal en móvil: el gesto natural para "pasar de
+    // pantalla" en un recorrido horizontal es arrastrar a los lados,
+    // no solo hacia arriba/abajo. Traduce el arrastre horizontal a la
+    // misma posición de scroll que ya mueve el paneo, así que el imán
+    // y todo lo demás sigue funcionando igual sin duplicar lógica. Si
+    // el toque empieza dentro de la pantalla del proyecto, esa ya
+    // captura su propio touch (vídeo) y stopPropagation lo aísla de
+    // aquí, así que no hay conflicto.
+    const HORIZ_THRESHOLD = 8
+    // El scroll nativo vertical tiene inercia (fling) que le da mucho
+    // alcance por swipe; este mapeo es directo (sin inercia), así que
+    // se amplifica para que un arrastre normal baste para cruzar el
+    // radio de captura del imán y llegar a la siguiente pantalla.
+    const HORIZ_SENSITIVITY = 4.5
+    let touchStartX = 0
+    let touchStartY = 0
+    let touchLastX = 0
+    let horizDragging = null
+
+    const onTouchStart = (e) => {
+      const t = e.touches[0]
+      touchStartX = touchLastX = t.clientX
+      touchStartY = t.clientY
+      horizDragging = null
+    }
+    const onTouchMove = (e) => {
+      const t = e.touches[0]
+      const dx = t.clientX - touchStartX
+      const dy = t.clientY - touchStartY
+      if (horizDragging === null && (Math.abs(dx) > HORIZ_THRESHOLD || Math.abs(dy) > HORIZ_THRESHOLD)) {
+        horizDragging = Math.abs(dx) > Math.abs(dy)
+      }
+      if (horizDragging) {
+        e.preventDefault()
+        const stepX = touchLastX - t.clientX // arrastrar a la izquierda avanza
+        touchLastX = t.clientX
+        const max = document.documentElement.scrollHeight - window.innerHeight
+        const next = Math.min(max, Math.max(0, lenis.scroll + stepX * HORIZ_SENSITIVITY))
+        lenis.scrollTo(next, { immediate: true })
+      }
+    }
+    viewportEl.addEventListener('touchstart', onTouchStart, { passive: true })
+    viewportEl.addEventListener('touchmove', onTouchMove, { passive: false })
 
     const onResize = () => applyTransform(smoothed)
     window.addEventListener('resize', onResize)
@@ -118,6 +162,8 @@ export default function InmobiliarioCategory() {
     return () => {
       gsap.ticker.remove(onTick)
       window.removeEventListener('resize', onResize)
+      viewportEl.removeEventListener('touchstart', onTouchStart)
+      viewportEl.removeEventListener('touchmove', onTouchMove)
       st.kill()
       destroy()
     }
