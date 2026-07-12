@@ -45,7 +45,10 @@ export default function ProjectScreenVideo({ project, style }) {
       }
     }
 
-    const SEC_PER_PX = 0.0022
+    // El espacio de esta pantalla es pequeño: 15% de la sensibilidad
+    // "normal" de scrubbing, para que haga falta mucho más scroll/
+    // arrastre para recorrer todo el vídeo.
+    const SEC_PER_PX = 0.00033
 
     const onWheel = (e) => {
       if (!duration) return
