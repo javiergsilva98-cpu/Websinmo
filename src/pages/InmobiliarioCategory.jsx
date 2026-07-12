@@ -4,9 +4,15 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { initSmoothScroll } from '../lib/smoothScroll.js'
 import { CATEGORIES } from '../config/catalog.js'
+import { VIDEO_SRC, VIDEO_POSTER } from '../config/content.js'
 import ProjectScreenVideo from './ProjectScreenVideo.jsx'
 import { cornerPinStyle } from '../lib/cornerPin.js'
 import './InmobiliarioCategory.css'
+
+// Vídeo de la segunda pantalla (la que estaba libre): el mismo trato
+// que el de la casa, pero sin página propia todavía (sin `to`, no navega).
+const BERNABEU_VIDEO_SRC = '/media/bernabeu-v1.mp4'
+const BERNABEU_VIDEO_POSTER = '/media/bernabeu-poster-v1.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
 ScrollTrigger.config({ ignoreMobileResize: true })
@@ -17,7 +23,12 @@ ScrollTrigger.config({ ignoreMobileResize: true })
 const IMG_W = 1376
 const IMG_H = 768
 const SCREENS = {
-  off: { x: 20, y: 200, w: 465, h: 252 },
+  // Medido a mano sobre la foto: este monitor también está ligeramente
+  // girado (el borde superior sube ~30px hacia la costura del centro),
+  // así que el rectángulo se deja con margen de sobra en los 4 lados
+  // para que quede siempre dentro del cristal, nunca asomando a la
+  // pared o al bisel.
+  off: { x: 45, y: 240, w: 420, h: 175 },
   // Medido por detección de bordes sobre la foto (transición
   // brillo->oscuro), no a ojo: el rectángulo anterior invadía un poco
   // el bisel y la pared por arriba.
@@ -201,8 +212,21 @@ export default function InmobiliarioCategory() {
             alt="Puesto de trabajo con tres monitores"
           />
 
+          <ProjectScreenVideo
+            videoSrc={BERNABEU_VIDEO_SRC}
+            poster={BERNABEU_VIDEO_POSTER}
+            title="Santiago Bernabéu"
+            style={screenStyle(SCREENS.off)}
+          />
+
           {project && (
-            <ProjectScreenVideo project={project} style={screenStyle(SCREENS.project)} />
+            <ProjectScreenVideo
+              videoSrc={VIDEO_SRC}
+              poster={VIDEO_POSTER}
+              title={project.title}
+              to={`/inmobiliario/${project.slug}`}
+              style={screenStyle(SCREENS.project)}
+            />
           )}
 
           <div className="inmo-screen inmo-screen--contact" style={contactScreenStyle}>

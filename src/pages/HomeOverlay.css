@@ -10,6 +10,11 @@
 
 .home-logo {
   display: block;
-  width: clamp(180px, 36vw, 320px);
+  /* El 36vw se pensó para móvil, donde el mínimo (180px) es quien manda
+     siempre; en pantallas de escritorio ese mismo vw superaba el mínimo
+     y el logo salía casi el doble de grande que en móvil. Con 9vw se
+     mantiene en el mínimo (mismo tamaño que en móvil) hasta anchos muy
+     grandes, donde crece un poco en vez de quedarse plano. */
+  width: clamp(180px, 9vw, 210px);
   height: auto;
 }

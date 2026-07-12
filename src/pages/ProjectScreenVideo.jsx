@@ -1,23 +1,26 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
-import { VIDEO_SRC, VIDEO_POSTER } from '../config/content.js'
 
 /**
- * Pantalla del monitor central: el vídeo real de la casa (sin ningún
- * texto de la propia web del proyecto, solo el vídeo) y scrubbable
- * con el scroll — pero únicamente mientras el puntero/dedo está sobre
- * esta pantalla. El wheel/touch se captura aquí (preventDefault +
- * stopPropagation) para que NUNCA llegue a mover el paneo de fondo
- * entre monitores; en cuanto el cursor sale de la pantalla, el scroll
- * vuelve a controlar el recorrido normal por la foto.
+ * Pantalla de un monitor: un vídeo (sin ningún texto de la propia web
+ * del proyecto, solo el vídeo) y scrubbable con el scroll — pero
+ * únicamente mientras el puntero/dedo está sobre esta pantalla. El
+ * wheel/touch se captura aquí (preventDefault + stopPropagation) para
+ * que NUNCA llegue a mover el paneo de fondo entre monitores; en cuanto
+ * el cursor sale de la pantalla, el scroll vuelve a controlar el
+ * recorrido normal por la foto.
+ *
+ * Genérico: no todos los proyectos tienen página propia todavía — si no
+ * se pasa `to`, la pantalla no navega a ningún sitio al tocarla, solo
+ * reproduce.
  */
-export default function ProjectScreenVideo({ project, style }) {
-  const linkRef = useRef(null)
+export default function ProjectScreenVideo({ videoSrc, poster, title, to, sensitivity = 0.014, style }) {
+  const elRef = useRef(null)
   const videoRef = useRef(null)
 
   useEffect(() => {
-    const el = linkRef.current
+    const el = elRef.current
     const video = videoRef.current
     if (!el || !video) return
 
@@ -45,16 +48,11 @@ export default function ProjectScreenVideo({ project, style }) {
       }
     }
 
-    // Mucho más rápido que un scrubbing "normal": con poco scroll o
-    // arrastre se recorre todo el vídeo, apropiado para una pantalla
-    // pequeña de previsualización.
-    const SEC_PER_PX = 0.02
-
     const onWheel = (e) => {
       if (!duration) return
       e.preventDefault()
       e.stopPropagation()
-      targetTime = Math.min(duration, Math.max(0, targetTime + e.deltaY * SEC_PER_PX))
+      targetTime = Math.min(duration, Math.max(0, targetTime + e.deltaY * sensitivity))
     }
 
     // Táctil: distingue arrastre (scrub del vídeo) de toque simple
@@ -79,7 +77,7 @@ export default function ProjectScreenVideo({ project, style }) {
       if (!dragging && Math.abs(y - touchStartY) > DRAG_THRESHOLD) dragging = true
       if (dragging && duration) {
         e.preventDefault()
-        targetTime = Math.min(duration, Math.max(0, targetTime + delta * SEC_PER_PX * 3))
+        targetTime = Math.min(duration, Math.max(0, targetTime + delta * sensitivity * 3))
       }
     }
     const onTouchEnd = (e) => {
@@ -111,22 +109,17 @@ export default function ProjectScreenVideo({ project, style }) {
       el.removeEventListener('touchend', onTouchEnd)
       el.removeEventListener('pointerdown', prime)
     }
-  }, [])
+  }, [sensitivity])
 
-  return (
-    <Link
-      ref={linkRef}
-      to={`/inmobiliario/${project.slug}`}
-      className="inmo-screen inmo-screen--project"
-      style={style}
-    >
+  const content = (
+    <>
       <div className="inmo-project-media">
-        <div className="inmo-project-poster" style={{ backgroundImage: `url(${VIDEO_POSTER})` }} />
+        <div className="inmo-project-poster" style={{ backgroundImage: `url(${poster})` }} />
         <video
           ref={videoRef}
           className="inmo-project-video"
-          src={VIDEO_SRC}
-          poster={VIDEO_POSTER}
+          src={videoSrc}
+          poster={poster}
           muted
           playsInline
           preload="auto"
@@ -134,7 +127,21 @@ export default function ProjectScreenVideo({ project, style }) {
           disableRemotePlayback
         />
       </div>
-      <span className="inmo-screen-title">{project.title}</span>
-    </Link>
+      <span className="inmo-screen-title">{title}</span>
+    </>
+  )
+
+  if (to) {
+    return (
+      <Link ref={elRef} to={to} className="inmo-screen inmo-screen--project" style={style}>
+        {content}
+      </Link>
+    )
+  }
+
+  return (
+    <div ref={elRef} className="inmo-screen inmo-screen--project" style={style}>
+      {content}
+    </div>
   )
 }
