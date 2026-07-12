@@ -1,0 +1,136 @@
+.inmo-viewport {
+  position: fixed;
+  inset: 0;
+  height: 100vh; /* fallback */
+  height: 100svh;
+  overflow: hidden;
+  background: #101418;
+}
+
+.inmo-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1376px;
+  height: 768px;
+  will-change: transform;
+}
+
+.inmo-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.inmo-back {
+  position: fixed;
+  top: calc(18px + env(safe-area-inset-top));
+  left: 18px;
+  z-index: 5;
+  color: #fff;
+  opacity: 0.75;
+  text-decoration: none;
+  font-size: 14px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+.inmo-back:hover {
+  opacity: 1;
+}
+
+/* Rectángulo superpuesto a cada pantalla, en las mismas coordenadas de
+   la foto: al compartir el transform del canvas, escala y se mueve
+   con él sin cálculos aparte. */
+.inmo-screen {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.inmo-screen--project {
+  display: block;
+  text-decoration: none;
+}
+
+.inmo-screen--project img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.inmo-screen--project:hover img {
+  transform: scale(1.05);
+}
+
+.inmo-screen-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px 12px 8px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.inmo-screen--contact {
+  background: #0c0e11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inmo-contact-form {
+  width: 100%;
+  height: 100%;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inmo-contact-title {
+  color: #f5f0e8;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.inmo-contact-form input,
+.inmo-contact-form textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 11px;
+  font-family: inherit;
+  padding: 5px 8px;
+  resize: none;
+}
+
+.inmo-contact-form input::placeholder,
+.inmo-contact-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.inmo-contact-form button {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: none;
+  background: #f5f0e8;
+  color: #101418;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
