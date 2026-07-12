@@ -17,7 +17,9 @@ const screenStyle = cornerPinStyle(VASE_SCREEN_CORNERS)
  * dimensiones de la pantalla del monitor, solo escalada uniformemente
  * (con JS, recalculado en resize) para aprovechar el viewport disponible
  * — el propio cuadrilátero es fijo en tamaño "de foto", igual que en la
- * pantalla embebida, y aquí se amplía sin deformarlo.
+ * pantalla embebida, y aquí se amplía sin deformarlo. Ese escalado sí es
+ * un transform normal (scale, sin perspectiva) aplicado a un ancestro,
+ * que compone bien con el matrix3d de dentro.
  */
 export default function Vase3DPage() {
   const viewerRef = useRef(null)

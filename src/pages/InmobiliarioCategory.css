@@ -106,13 +106,18 @@
   text-align: center;
 }
 
-.inmo-screen--vase {
-  background: #000;
-}
-
 .inmo-vase-tilt {
   position: absolute;
   inset: 0;
+  /* El fondo negro va aquí, NO en .inmo-screen--vase (el rectángulo
+     exterior sin inclinar): si va en el exterior, se ve como un
+     rectángulo negro que sobresale de la pantalla real por todos los
+     lados donde el cuadrilátero real (más pequeño que su propio
+     bounding box) no llega — justo el bug reportado. Aquí, con el
+     matrix3d, el negro se inclina junto con el resto del contenido y
+     solo pinta dentro de la forma real de la pantalla.
+  */
+  background: #000;
 }
 
 .inmo-vase-tilt model-viewer {
