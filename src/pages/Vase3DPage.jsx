@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Vase3DViewer from '../components/Vase3DViewer.jsx'
 import { cornerPinStyle } from '../lib/cornerPin.js'
+import { useDocumentTitle } from '../lib/useDocumentTitle.js'
 import { VASE_MODEL_SRC, VASE_SCREEN_CORNERS } from '../config/vase.js'
 import './Vase3DPage.css'
 
@@ -24,6 +25,7 @@ const screenStyle = cornerPinStyle(VASE_SCREEN_CORNERS)
 export default function Vase3DPage() {
   const viewerRef = useRef(null)
   const frameRef = useRef(null)
+  useDocumentTitle('Visor 3D — Websinmo')
 
   useEffect(() => {
     const frame = frameRef.current

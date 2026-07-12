@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import ScrollVideo from '../components/ScrollVideo.jsx'
 import Scenes from '../components/Scenes.jsx'
 import { initSmoothScroll } from '../lib/smoothScroll.js'
+import { useDocumentTitle } from '../lib/useDocumentTitle.js'
 import {
   VIDEO_SRC,
   VIDEO_POSTER,
@@ -12,6 +13,10 @@ import {
 /** /inmobiliario/una-casa-frente-al-mar */
 export default function CasaFrenteAlMar() {
   const trackRef = useRef(null)
+  // Coincide con el <title>/OG por defecto de index.html (la página que
+  // más se comparte): se fija aquí también para que quede correcto
+  // aunque el usuario llegue navegando desde otra ruta de la SPA.
+  useDocumentTitle('Una casa frente al mar — Proyecto de interiorismo')
 
   useEffect(() => {
     // La experiencia es una secuencia: siempre empieza por el principio,

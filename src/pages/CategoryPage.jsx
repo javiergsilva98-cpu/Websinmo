@@ -1,5 +1,6 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { CATEGORIES } from '../config/catalog.js'
+import { useDocumentTitle } from '../lib/useDocumentTitle.js'
 import './IndexPages.css'
 
 function ProjectCard({ category, project }) {
@@ -31,6 +32,7 @@ function ProjectCard({ category, project }) {
 export default function CategoryPage() {
   const { categorySlug } = useParams()
   const category = CATEGORIES.find((c) => c.slug === categorySlug)
+  useDocumentTitle(category ? `${category.title} — Websinmo` : null)
 
   if (!category) return <Navigate to="/" replace />
 

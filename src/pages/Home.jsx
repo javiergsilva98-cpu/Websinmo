@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import ScrollVideo from '../components/ScrollVideo.jsx'
 import HomeOverlay from './HomeOverlay.jsx'
 import { initSmoothScroll } from '../lib/smoothScroll.js'
+import { useDocumentTitle } from '../lib/useDocumentTitle.js'
 import {
   HOME_VIDEO_SRC,
   HOME_VIDEO_POSTER,
@@ -11,6 +12,7 @@ import {
 /** / — índice de categorías, con scroll-scrubbing sobre el vídeo del portátil */
 export default function Home() {
   const trackRef = useRef(null)
+  useDocumentTitle('Websinmo — Proyectos')
 
   useEffect(() => {
     // La experiencia es una secuencia: siempre empieza por el principio,

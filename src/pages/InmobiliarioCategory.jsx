@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { initSmoothScroll } from '../lib/smoothScroll.js'
+import { useDocumentTitle } from '../lib/useDocumentTitle.js'
 import { CATEGORIES } from '../config/catalog.js'
 import { VIDEO_SRC, VIDEO_POSTER } from '../config/content.js'
 import ProjectScreenVideo from './ProjectScreenVideo.jsx'
@@ -72,6 +73,7 @@ export default function InmobiliarioCategory() {
   const canvasRef = useRef(null)
   const viewportRef = useRef(null)
   const project = CATEGORIES.find((c) => c.slug === 'inmobiliario')?.projects[0]
+  useDocumentTitle('Inmobiliario — Websinmo')
 
   useEffect(() => {
     const track = trackRef.current
