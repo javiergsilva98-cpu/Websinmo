@@ -45,10 +45,10 @@ export default function ProjectScreenVideo({ project, style }) {
       }
     }
 
-    // El espacio de esta pantalla es pequeño: 15% de la sensibilidad
-    // "normal" de scrubbing, para que haga falta mucho más scroll/
-    // arrastre para recorrer todo el vídeo.
-    const SEC_PER_PX = 0.00033
+    // Mucho más rápido que un scrubbing "normal": con poco scroll o
+    // arrastre se recorre todo el vídeo, apropiado para una pantalla
+    // pequeña de previsualización.
+    const SEC_PER_PX = 0.02
 
     const onWheel = (e) => {
       if (!duration) return
