@@ -8,7 +8,7 @@ import { VIDEO_SRC, VIDEO_POSTER } from '../config/content.js'
 import ProjectScreenVideo from './ProjectScreenVideo.jsx'
 import VaseScreenViewer from './VaseScreenViewer.jsx'
 import ContactFallSection from './ContactFallSection.jsx'
-import { cornerPinStyle } from '../lib/cornerPin.js'
+import { cornerPinStyle, shrinkCorners } from '../lib/cornerPin.js'
 import { VASE_MODEL_SRC } from '../config/vase.js'
 import './InmobiliarioCategory.css'
 
@@ -46,7 +46,10 @@ const OFF_CORNERS = {
   br: [498, 446],
   bl: [29, 481],
 }
-const offScreenStyle = cornerPinStyle(OFF_CORNERS)
+// Un pelín más pequeño que la pantalla real: deja un pequeño marco de
+// la propia pantalla visible alrededor del vídeo, en vez de llenarla
+// justo hasta el borde.
+const offScreenStyle = cornerPinStyle(shrinkCorners(OFF_CORNERS, 0.92))
 
 // Esquinas reales de la tercera pantalla, por ajuste de recta (mínimos
 // cuadrados) a cada uno de los 4 bordes por separado sobre zonas limpias

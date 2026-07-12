@@ -56,6 +56,19 @@ function general2DProjection(src, dst) {
 }
 
 /**
+ * Acerca las 4 esquinas hacia su propio centro un `factor` (1 = igual,
+ * 0.9 = 10% más pequeño): sigue siendo el mismo cuadrilátero (mismo
+ * plano, mismos ángulos), solo más pequeño, dejando un pequeño marco de
+ * la pantalla real visible alrededor del contenido.
+ */
+export function shrinkCorners({ tl, tr, br, bl }, factor) {
+  const cx = (tl[0] + tr[0] + br[0] + bl[0]) / 4
+  const cy = (tl[1] + tr[1] + br[1] + bl[1]) / 4
+  const shrink = ([x, y]) => [cx + (x - cx) * factor, cy + (y - cy) * factor]
+  return { tl: shrink(tl), tr: shrink(tr), br: shrink(br), bl: shrink(bl) }
+}
+
+/**
  * corners: { tl, tr, br, bl } — cada una [x, y] en el mismo espacio de
  * coordenadas que el resto de la escena (píxeles de la foto fuente).
  *
