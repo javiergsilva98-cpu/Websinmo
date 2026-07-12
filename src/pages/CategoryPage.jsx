@@ -2,6 +2,31 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { CATEGORIES } from '../config/catalog.js'
 import './IndexPages.css'
 
+function ProjectCard({ category, project }) {
+  const content = (
+    <>
+      {project.thumbnail && (
+        <img src={project.thumbnail} alt={project.title} loading="lazy" />
+      )}
+      <span className="project-card-title">{project.title}</span>
+    </>
+  )
+  const className = `project-card${project.thumbnail ? '' : ' project-card--plain'}`
+
+  if (project.href) {
+    return (
+      <a className={className} href={project.href} target="_blank" rel="noreferrer">
+        {content}
+      </a>
+    )
+  }
+  return (
+    <Link className={className} to={`/${category.slug}/${project.slug}`}>
+      {content}
+    </Link>
+  )
+}
+
 /** /<categoría> — listado de proyectos de esa categoría */
 export default function CategoryPage() {
   const { categorySlug } = useParams()
@@ -19,14 +44,11 @@ export default function CategoryPage() {
         <h1 className="index-title">Proyectos</h1>
         <div className="project-grid">
           {category.projects.map((project) => (
-            <Link
-              key={project.slug}
-              to={`/${category.slug}/${project.slug}`}
-              className="project-card"
-            >
-              <img src={project.thumbnail} alt={project.title} loading="lazy" />
-              <span className="project-card-title">{project.title}</span>
-            </Link>
+            <ProjectCard
+              key={project.slug || project.href}
+              category={category}
+              project={project}
+            />
           ))}
         </div>
       </div>

@@ -122,3 +122,15 @@
   font-weight: 600;
   font-size: 15px;
 }
+
+/* Sin miniatura: ocupa el espacio de la foto con un degradado propio */
+.project-card--plain {
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: flex-end;
+  background: linear-gradient(155deg, #2a3644 0%, #101418 100%);
+}
+
+.project-card--plain .project-card-title {
+  padding: 16px;
+}
