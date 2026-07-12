@@ -23,12 +23,6 @@ ScrollTrigger.config({ ignoreMobileResize: true })
 const IMG_W = 1376
 const IMG_H = 768
 const SCREENS = {
-  // Medido a mano sobre la foto: este monitor también está ligeramente
-  // girado (el borde superior sube ~30px hacia la costura del centro),
-  // así que el rectángulo se deja con margen de sobra en los 4 lados
-  // para que quede siempre dentro del cristal, nunca asomando a la
-  // pared o al bisel.
-  off: { x: 45, y: 240, w: 420, h: 175 },
   // Medido por detección de bordes sobre la foto (transición
   // brillo->oscuro), no a ojo: el rectángulo anterior invadía un poco
   // el bisel y la pared por arriba.
@@ -36,6 +30,20 @@ const SCREENS = {
 }
 
 const screenStyle = (s) => ({ left: s.x, top: s.y, width: s.w, height: s.h })
+
+// Esquinas reales de la pantalla "apagada" (izquierda), medidas por
+// detección de bordes sobre la foto (transición pared/mesa->negro del
+// panel, ajustando una recta a varios puntos de cada lado): el monitor
+// está girado hacia la cámara, notablemente más alto por la izquierda
+// que por la derecha. cornerPinStyle encaja el vídeo en ese cuadrilátero
+// real en vez de un rectángulo recto.
+const OFF_CORNERS = {
+  tl: [18, 196],
+  tr: [496, 231],
+  br: [498, 446],
+  bl: [29, 481],
+}
+const offScreenStyle = cornerPinStyle(OFF_CORNERS)
 
 // Esquinas reales de la pantalla de contacto, medidas a mano sobre la
 // foto (píxeles de la imagen fuente): el monitor está girado, así que
@@ -51,7 +59,7 @@ const CONTACT_CORNERS = {
 const contactScreenStyle = cornerPinStyle(CONTACT_CORNERS)
 
 const STOP_CENTERS = [
-  SCREENS.off.x + SCREENS.off.w / 2,
+  offScreenStyle.left + offScreenStyle.width / 2,
   SCREENS.project.x + SCREENS.project.w / 2,
   contactScreenStyle.left + contactScreenStyle.width / 2,
 ]
@@ -216,7 +224,7 @@ export default function InmobiliarioCategory() {
             videoSrc={BERNABEU_VIDEO_SRC}
             poster={BERNABEU_VIDEO_POSTER}
             title="Santiago Bernabéu"
-            style={screenStyle(SCREENS.off)}
+            style={offScreenStyle}
           />
 
           {project && (
