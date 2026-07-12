@@ -121,7 +121,21 @@ export function initSmoothScroll(getSnapPoints) {
       if (Math.abs(p - y) < Math.abs(nearest - y)) nearest = p
     }
     const dist = Math.abs(nearest - y)
-    if (dist < 2 || dist > window.innerHeight * MAX_SNAP_DIST_VH) return
+
+    // El límite no puede ser un valor fijo: si el hueco entre dos paradas
+    // consecutivas es mayor que 2x el límite, el punto medio entre ambas
+    // queda fuera del alcance de las dos y el imán no actúa sobre él —
+    // el scroll se queda "colgado" ahí (a medias entre dos pantallas).
+    // Se amplía el límite, cuando hace falta, a medio hueco real entre
+    // paradas (con un pequeño margen) para que el imán cubra siempre el
+    // 100% del recorrido, sin tocar el comportamiento en páginas con
+    // paradas ya lo bastante juntas (como el recorrido de la casa).
+    const sorted = [...points].sort((a, b) => a - b)
+    let maxGap = 0
+    for (let i = 1; i < sorted.length; i++) maxGap = Math.max(maxGap, sorted[i] - sorted[i - 1])
+    const limit = Math.max(window.innerHeight * MAX_SNAP_DIST_VH, (maxGap / 2) * 1.05)
+
+    if (dist < 2 || dist > limit) return
 
     anim = {
       from: y,
