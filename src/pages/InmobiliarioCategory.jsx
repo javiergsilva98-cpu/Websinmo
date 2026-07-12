@@ -6,6 +6,7 @@ import { initSmoothScroll } from '../lib/smoothScroll.js'
 import { CATEGORIES } from '../config/catalog.js'
 import { VIDEO_SRC, VIDEO_POSTER } from '../config/content.js'
 import ProjectScreenVideo from './ProjectScreenVideo.jsx'
+import VaseScreenViewer from './VaseScreenViewer.jsx'
 import { cornerPinStyle } from '../lib/cornerPin.js'
 import './InmobiliarioCategory.css'
 
@@ -13,6 +14,9 @@ import './InmobiliarioCategory.css'
 // que el de la casa, pero sin página propia todavía (sin `to`, no navega).
 const BERNABEU_VIDEO_SRC = '/media/bernabeu-v1.mp4'
 const BERNABEU_VIDEO_POSTER = '/media/bernabeu-poster-v1.jpg'
+
+// Modelo 3D de la tercera pantalla (antes el formulario de contacto).
+const VASE_MODEL_SRC = '/models/vase-v1.glb'
 
 gsap.registerPlugin(ScrollTrigger)
 ScrollTrigger.config({ ignoreMobileResize: true })
@@ -45,23 +49,23 @@ const OFF_CORNERS = {
 }
 const offScreenStyle = cornerPinStyle(OFF_CORNERS)
 
-// Esquinas reales de la pantalla de contacto, medidas a mano sobre la
-// foto (píxeles de la imagen fuente): el monitor está girado, así que
-// no es un rectángulo recto sino un cuadrilátero. cornerPinStyle calcula
-// la matrix3d que deforma el div plano del formulario hasta encajar
-// exactamente en ese plano inclinado, en vez de superponerlo recto.
-const CONTACT_CORNERS = {
+// Esquinas reales de la tercera pantalla, medidas a mano sobre la foto
+// (píxeles de la imagen fuente): el monitor está girado, así que no es
+// un rectángulo recto sino un cuadrilátero. cornerPinStyle calcula la
+// matrix3d que deforma el div plano hasta encajar exactamente en ese
+// plano inclinado, en vez de superponerlo recto.
+const VASE_CORNERS = {
   tl: [874, 204],
   tr: [1296, 181],
   br: [1325, 478],
   bl: [875, 458],
 }
-const contactScreenStyle = cornerPinStyle(CONTACT_CORNERS)
+const vaseScreenStyle = cornerPinStyle(VASE_CORNERS)
 
 const STOP_CENTERS = [
   offScreenStyle.left + offScreenStyle.width / 2,
   SCREENS.project.x + SCREENS.project.w / 2,
-  contactScreenStyle.left + contactScreenStyle.width / 2,
+  vaseScreenStyle.left + vaseScreenStyle.width / 2,
 ]
 
 /**
@@ -69,7 +73,7 @@ const STOP_CENTERS = [
  * monitores: el scroll (vertical, el gesto normal del usuario) mueve
  * la cámara de izquierda a derecha sobre la imagen ("scroll-scrubbing"
  * pero de paneo en vez de tiempo de vídeo). Tres paradas con imán:
- * pantalla apagada → proyecto → contacto.
+ * pantalla apagada → proyecto → modelo 3D.
  */
 export default function InmobiliarioCategory() {
   const trackRef = useRef(null)
@@ -139,7 +143,7 @@ export default function InmobiliarioCategory() {
     }
     gsap.ticker.add(onTick)
 
-    // Tres paradas con imán: apagada / proyecto / contacto.
+    // Tres paradas con imán: apagada / proyecto / modelo 3D.
     const getSnapPoints = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight
       if (max <= 0) return []
@@ -237,15 +241,7 @@ export default function InmobiliarioCategory() {
             />
           )}
 
-          <div className="inmo-screen inmo-screen--contact" style={contactScreenStyle}>
-            <form className="inmo-contact-form" onSubmit={(e) => e.preventDefault()}>
-              <p className="inmo-contact-title">Contacto</p>
-              <input type="text" placeholder="Nombre" />
-              <input type="email" placeholder="Email" />
-              <textarea placeholder="Mensaje" rows={2} />
-              <button type="submit">Enviar</button>
-            </form>
-          </div>
+          <VaseScreenViewer src={VASE_MODEL_SRC} style={vaseScreenStyle} />
         </div>
       </div>
 

@@ -96,59 +96,10 @@
   letter-spacing: -0.01em;
 }
 
-.inmo-screen--contact {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.inmo-screen--vase {
+  background: #000;
 }
 
-.inmo-contact-form {
-  width: 70%;
-  max-width: 220px;
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.inmo-contact-title {
-  color: #f5f0e8;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 2px;
-  text-align: center;
-}
-
-.inmo-contact-form input,
-.inmo-contact-form textarea {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 3px;
-  color: #fff;
-  font-size: 8px;
-  font-family: inherit;
-  padding: 3px 6px;
-  resize: none;
-}
-
-.inmo-contact-form input::placeholder,
-.inmo-contact-form textarea::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.inmo-contact-form button {
-  align-self: center;
-  margin-top: 2px;
-  padding: 3px 12px;
-  border-radius: 999px;
-  border: none;
-  background: #f5f0e8;
-  color: #101418;
-  font-size: 8px;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
+.inmo-screen--vase model-viewer {
+  --poster-color: #000;
 }
