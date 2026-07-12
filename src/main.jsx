@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import App from './App.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 import './styles/global.css'
 
 // Registro único para toda la app (antes se repetía, de forma inofensiva
@@ -15,8 +16,10 @@ ScrollTrigger.config({ ignoreMobileResize: true })
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>,
 )
