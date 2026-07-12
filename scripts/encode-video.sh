@@ -2,13 +2,15 @@
 #
 # Recodifica un vídeo para scroll-scrubbing fiable en iOS/Android/desktop.
 #
-#   ./scripts/encode-video.sh entrada.mov [version]
+#   ./scripts/encode-video.sh entrada.mov [nombre-base] [version]
 #
 # Genera:
-#   public/media/hero-v<N>.mp4        (vídeo scrubbable)
-#   public/media/hero-poster-v<N>.jpg (primer fotograma como poster)
+#   public/media/<nombre-base>-v<N>.mp4        (vídeo scrubbable)
+#   public/media/<nombre-base>-poster-v<N>.jpg (primer fotograma como poster)
 #
-# Después actualiza VIDEO_SRC/VIDEO_POSTER en src/config/content.js.
+# nombre-base identifica el vídeo (p. ej. "hero" para la casa, "home"
+# para el índice): cada página/proyecto con su propio vídeo de fondo
+# usa un nombre distinto para no pisarse entre sí.
 #
 # Por qué cada flag (aprendido a base de sustos):
 #   -bf 0            SIN B-frames: con ellos iOS Safari pinta un fotograma
@@ -34,11 +36,12 @@
 
 set -euo pipefail
 
-INPUT="${1:?Uso: $0 entrada.mov [version]}"
-VERSION="${2:-1}"
+INPUT="${1:?Uso: $0 entrada.mov [nombre-base] [version]}"
+NAME="${2:-hero}"
+VERSION="${3:-1}"
 OUT_DIR="$(dirname "$0")/../public/media"
-OUT_VIDEO="$OUT_DIR/hero-v${VERSION}.mp4"
-OUT_POSTER="$OUT_DIR/hero-poster-v${VERSION}.jpg"
+OUT_VIDEO="$OUT_DIR/${NAME}-v${VERSION}.mp4"
+OUT_POSTER="$OUT_DIR/${NAME}-poster-v${VERSION}.jpg"
 
 mkdir -p "$OUT_DIR"
 
@@ -60,6 +63,6 @@ echo "OK:"
 echo "  $OUT_VIDEO"
 echo "  $OUT_POSTER"
 echo ""
-echo "Ahora actualiza src/config/content.js:"
-echo "  VIDEO_SRC    = '/media/hero-v${VERSION}.mp4'"
-echo "  VIDEO_POSTER = '/media/hero-poster-v${VERSION}.jpg'"
+echo "Ahora actualiza VIDEO_SRC/VIDEO_POSTER donde corresponda:"
+echo "  '/media/${NAME}-v${VERSION}.mp4'"
+echo "  '/media/${NAME}-poster-v${VERSION}.jpg'"

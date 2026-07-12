@@ -44,52 +44,8 @@
   margin-bottom: 40px;
 }
 
-.index-grid,
 .project-grid {
   display: grid;
-  gap: 14px;
-}
-
-.index-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 22px 56px 22px 22px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  text-decoration: none;
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.index-card:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.22);
-}
-
-.index-card-title {
-  font-size: 19px;
-  font-weight: 700;
-  color: #fff;
-}
-
-.index-card-desc {
-  font-size: 14px;
-  color: #fff;
-  opacity: 0.65;
-}
-
-.index-card-arrow {
-  position: absolute;
-  right: 22px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #f5f0e8;
-  font-size: 20px;
-}
-
-.project-grid {
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
 
