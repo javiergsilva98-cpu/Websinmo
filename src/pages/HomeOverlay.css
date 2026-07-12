@@ -1,6 +1,15 @@
+.home-logo-wrap {
+  position: absolute;
+  top: calc(9svh + env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
 .home-logo {
   display: block;
-  width: clamp(56px, 14vw, 84px);
+  width: clamp(180px, 36vw, 320px);
   height: auto;
-  margin: 0 auto 18px;
 }
