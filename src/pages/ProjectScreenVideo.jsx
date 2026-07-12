@@ -15,7 +15,7 @@ import { gsap } from 'gsap'
  * se pasa `to`, la pantalla no navega a ningún sitio al tocarla, solo
  * reproduce.
  */
-export default function ProjectScreenVideo({ videoSrc, poster, title, to, sensitivity = 0.014, style }) {
+export default function ProjectScreenVideo({ videoSrc, poster, title, to, sensitivity = 0.0098, style }) {
   const elRef = useRef(null)
   const videoRef = useRef(null)
 
